@@ -35,11 +35,11 @@ Manager::Manager() :
 		    this, SLOT(slotAdapterAdded(QDBusObjectPath)));
 }
 
-QList<QVariant> Manager::getAdapters()
+QList<QString> Manager::getAdapters()
 {
 	QDBusMessage msg, reply;
 	QDBusConnection con = QDBusConnection::systemBus();
-	QList<QVariant> adapters;
+	QList<QString> adapters;
 
 	msg = QDBusMessage::createMethodCall("org.bluez", "/",
 					"org.bluez.Manager", "ListAdapters");
@@ -60,22 +60,7 @@ QList<QVariant> Manager::getAdapters()
 		return adapters;
 	}
 
-	QVariant v = reply.arguments().at(0);
-
-	if (v.type() < QVariant::UserType) {
-		qWarning() << "Unspected reply received";
-		return adapters;
-	}
-
-	QStringList sl;
-	v.value<QDBusArgument>() >> sl;
-
-	for (int i = 0; i < sl.count(); i++) {
-		QString s = sl.at(i);
-		adapters << s;
-	}
-
-	return adapters;
+	return qdbus_cast<QStringList>(reply.arguments()[0]);
 }
 
 void Manager::slotAdapterRemoved(QDBusObjectPath path)

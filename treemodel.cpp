@@ -164,9 +164,9 @@ void TreeModel::setupModelData()
 	parents << rootItem;
 
 	// Perform a DBus call for get all the adapters
-	QList<QVariant> adapters = manager->getAdapters();
+	QList<QString> adapters = manager->getAdapters();
 	for (int i = 0; i < adapters.count(); i++) {
-		Adapter *adapter = new Adapter(adapters.at(i).toString());
+		Adapter *adapter = new Adapter(adapters[i]);
 
 		QVariantMap props = adapter->getProperties();
 

@@ -78,7 +78,7 @@ QMap<QString, QVariant> Adapter::getProperties()
 		return props;
 	}
 
-	props = qdbus_cast< QVariantMap >(reply.arguments()[0]);
+	props = qdbus_cast<QVariantMap>(reply.arguments()[0]);
 	return props;
 }
 

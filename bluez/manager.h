@@ -10,7 +10,7 @@ class Manager : public QObject
 
 public:
 	Manager();
-	QList<QVariant> getAdapters();
+	QList<QString> getAdapters();
 
 signals:
 	void adapterRemoved(QString path);

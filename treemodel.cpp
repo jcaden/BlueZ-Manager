@@ -46,7 +46,9 @@
 
 #include "treeitem.h"
 #include "treemodel.h"
+
 #include "bluez/manager.h"
+#include "bluez/adapter.h"
 
 TreeModel::TreeModel(QObject *parent)
 	: QAbstractItemModel(parent)
@@ -164,10 +166,10 @@ void TreeModel::setupModelData()
 	// Perform a DBus call for get all the adapters
 	QList<QVariant> adapters = manager->getAdapters();
 	for (int i = 0; i < adapters.count(); i++) {
-
+		Adapter *adapter = new Adapter(adapters.at(i).toString());
 		QList<QVariant> columnData;
 		columnData << adapters.at(i);
-		parents.last()->appendChild(new TreeItem(columnData,
+		parents.last()->appendChild(new TreeItem(columnData, adapter,
 							 parents.last()));
 	}
 }

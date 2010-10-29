@@ -48,6 +48,8 @@ class TreeItem
 {
 public:
 	TreeItem(const QList<QVariant> &data, TreeItem *parent = 0);
+	TreeItem(const QList<QVariant> &data, QObject *priv_data,
+		 TreeItem *parent = 0);
 	~TreeItem();
 
 	void appendChild(TreeItem *child);
@@ -59,10 +61,14 @@ public:
 	int row() const;
 	TreeItem *parent();
 
+	QObject *getData() const;
+
 private:
 	QList<TreeItem*> childItems;
 	QList<QVariant> itemData;
 	TreeItem *parentItem;
+
+	QObject *privData;
 };
 
 #endif

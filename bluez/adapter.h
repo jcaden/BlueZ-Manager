@@ -2,6 +2,8 @@
 #define ADAPTER_H
 
 #include <QObject>
+#include <QMap>
+
 #include <QtDBus/QtDBus>
 
 class Adapter : public QObject
@@ -12,9 +14,12 @@ public:
 	Adapter(QString path);
 	Adapter(Adapter &adapter);
 	~Adapter();
+	QMap<QString, QVariant> getProperties();
 	QList<QVariant> listDevices();
 
 private:
+	void setSignals();
+
 	QString *path;
 	QDBusConnection con;
 

@@ -167,8 +167,11 @@ void TreeModel::setupModelData()
 	QList<QVariant> adapters = manager->getAdapters();
 	for (int i = 0; i < adapters.count(); i++) {
 		Adapter *adapter = new Adapter(adapters.at(i).toString());
+
+		QVariantMap props = adapter->getProperties();
+
 		QList<QVariant> columnData;
-		columnData << adapters.at(i);
+		columnData << adapters.at(i) << props.take("Name");
 		parents.last()->appendChild(new TreeItem(columnData, adapter,
 							 parents.last()));
 	}

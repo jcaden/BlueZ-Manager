@@ -30,10 +30,7 @@ Adapter::Adapter(QString path) :
 	con(QDBusConnection::systemBus())
 {
 	this->path = new QString(path);
-	con.connect("org.bluez", "/", "org.bluez.Adapter", "AdapterRemoved",
-		    this, SLOT(slotAdapterRemoved(QDBusObjectPath)));
-	con.connect("org.bluez", "/", "org.bluez.Manager", "AdapterAdded",
-		    this, SLOT(slotAdapterAdded(QDBusObjectPath)));
+	setSignals();
 }
 
 Adapter::Adapter(Adapter &adapter) :
@@ -41,9 +38,54 @@ Adapter::Adapter(Adapter &adapter) :
 		con(QDBusConnection::systemBus())
 {
 	path = new QString(*adapter.path);
+	setSignals();
 }
 
 Adapter::~Adapter()
 {
 	delete this->path;
+}
+
+QMap<QString, QVariant> Adapter::getProperties()
+{
+	QDBusMessage msg, reply;
+	QDBusConnection con = QDBusConnection::systemBus();
+	QMap<QString, QVariant> props;
+
+	msg = QDBusMessage::createMethodCall("org.bluez", path->toAscii().data(),
+					"org.bluez.Adapter", "GetProperties");
+	reply = con.call(msg, QDBus::Block, -1);
+
+	if (reply.type() == QDBusMessage::ErrorMessage) {
+		qWarning() << "Error reply received: " << reply.errorMessage();
+		return props;
+	}
+
+	if (reply.arguments().count() != 1) {
+		qWarning() << "Unspected reply received";
+		return props;
+	}
+
+	if (reply.signature() != "a{sv}") {
+		qWarning() << "Unspected reply signature";
+		return props;
+	}
+
+	QVariant v = reply.arguments().at(0);
+
+	if (v.type() < QVariant::UserType) {
+		qWarning() << "Unspected reply received";
+		return props;
+	}
+
+	props = qdbus_cast< QVariantMap >(reply.arguments()[0]);
+	return props;
+}
+
+void Adapter::setSignals()
+{
+//	con.connect("org.bluez", "/", "org.bluez.Adapter", "AdapterRemoved",
+//		    this, SLOT(slotAdapterRemoved(QDBusObjectPath)));
+//	con.connect("org.bluez", "/", "org.bluez.Manager", "AdapterAdded",
+//		    this, SLOT(slotAdapterAdded(QDBusObjectPath)));
 }

@@ -80,12 +80,10 @@ QList<QVariant> Manager::getAdapters()
 
 void Manager::slotAdapterRemoved(QDBusObjectPath path)
 {
-	qDebug() << "Adapter removed " << path.path();
 	emit adapterRemoved(path.path());
 }
 
 void Manager::slotAdapterAdded(QDBusObjectPath path)
 {
-	qDebug() << "Adapter added " << path.path();
-	emit adapterRemoved(path.path());
+	emit adapterAdded(path.path());
 }

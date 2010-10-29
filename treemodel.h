@@ -77,7 +77,7 @@ private:
 	void setSignals();
 
 	TreeItem *rootItem;
-	Manager manager;
+	Manager *manager;
 };
 
 #endif

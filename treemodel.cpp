@@ -51,6 +51,7 @@
 TreeModel::TreeModel(QObject *parent)
 	: QAbstractItemModel(parent)
 {
+	manager = new Manager();
 	rootItem = NULL;
 	setupModelData();
 
@@ -60,6 +61,7 @@ TreeModel::TreeModel(QObject *parent)
 TreeModel::~TreeModel()
 {
 	delete rootItem;
+	delete manager;
 }
 
 int TreeModel::columnCount(const QModelIndex &parent) const
@@ -160,7 +162,7 @@ void TreeModel::setupModelData()
 	parents << rootItem;
 
 	// Perform a DBus call for get all the adapters
-	QList<QVariant> adapters = manager.getAdapters();
+	QList<QVariant> adapters = manager->getAdapters();
 	for (int i = 0; i < adapters.count(); i++) {
 
 		QList<QVariant> columnData;
@@ -172,19 +174,19 @@ void TreeModel::setupModelData()
 
 void TreeModel::setSignals()
 {
-	qDebug() << "Seting signals";
-	connect(&manager, SIGNAL(adapterAdded(QString)), this,
+	qDebug() << "Setting signals";
+	connect(manager, SIGNAL(adapterAdded(QString)), this,
 		SLOT(adapterAdded(QString)));
-	connect(&manager, SIGNAL(adapterRemoved(QString)), this,
-		SLOT(adapterRemoveds(QString)));
+	connect(manager, SIGNAL(adapterRemoved(QString)), this,
+		SLOT(adapterRemoved(QString)));
 }
 
 void TreeModel::adapterRemoved(QString path)
 {
-	qDebug() << "Adapter removed bis " << path;
+	qWarning() << "Adapter removed bis" << path;
 }
 
 void TreeModel::adapterAdded(QString path)
 {
-	qDebug() << "Adapter added bis " << path;
+	qWarning() << "Adapter added bis" << path;
 }

@@ -2,7 +2,6 @@
 #define ADAPTER_H
 
 #include <QObject>
-#include <QMap>
 
 #include <QtDBus/QtDBus>
 
@@ -14,7 +13,7 @@ public:
 	Adapter(QString path);
 	Adapter(Adapter &adapter);
 	~Adapter();
-	QMap<QString, QVariant> getProperties();
+	QVariantMap getProperties();
 	QList<QVariant> listDevices();
 
 private:

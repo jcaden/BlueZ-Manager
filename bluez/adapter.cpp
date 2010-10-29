@@ -71,13 +71,6 @@ QMap<QString, QVariant> Adapter::getProperties()
 		return props;
 	}
 
-	QVariant v = reply.arguments().at(0);
-
-	if (v.type() < QVariant::UserType) {
-		qWarning() << "Unspected reply received";
-		return props;
-	}
-
 	props = qdbus_cast<QVariantMap>(reply.arguments()[0]);
 	return props;
 }

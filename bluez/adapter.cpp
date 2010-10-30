@@ -83,3 +83,32 @@ void Adapter::setSignals()
 //	con.connect("org.bluez", "/", "org.bluez.Manager", "AdapterAdded",
 //		    this, SLOT(slotAdapterAdded(QDBusObjectPath)));
 }
+
+QStringList Adapter::listDevices()
+{
+	QDBusMessage msg, reply;
+	QDBusConnection con = QDBusConnection::systemBus();
+
+	msg = QDBusMessage::createMethodCall("org.bluez",
+					     path->toAscii().data(),
+					     "org.bluez.Adapter",
+					     "ListDevices");
+	reply = con.call(msg, QDBus::Block, -1);
+
+	if (reply.type() == QDBusMessage::ErrorMessage) {
+		qWarning() << "Error reply received: " << reply.errorMessage();
+		return QStringList();
+	}
+
+	if (reply.arguments().count() != 1) {
+		qWarning() << "Unspected reply received";
+		return QStringList();
+	}
+
+	if (reply.signature() != "ao") {
+		qWarning() << "Unspected reply signature";
+		return QStringList();
+	}
+
+	return qdbus_cast<QStringList>(reply.arguments()[0]);
+}

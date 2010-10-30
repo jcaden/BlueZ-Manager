@@ -49,6 +49,7 @@
 
 #include "bluez/manager.h"
 #include "bluez/adapter.h"
+#include "bluez/device.h"
 
 TreeModel::TreeModel(QObject *parent)
 	: QAbstractItemModel(parent)
@@ -160,9 +161,6 @@ void TreeModel::setupModelData()
 		delete rootItem;
 	rootItem = new TreeItem(rootData);
 
-	QList<TreeItem*> parents;
-	parents << rootItem;
-
 	// Perform a DBus call for get all the adapters
 	QStringList adapters = manager->getAdapters();
 	for (int i = 0; i < adapters.count(); i++) {
@@ -173,8 +171,22 @@ void TreeModel::setupModelData()
 		QList<QVariant> columnData;
 		columnData << adapters.at(i) << props.take("Name");
 		TreeItem *adapterItem = new TreeItem(columnData, adapter,
-						     parents.last());
-		parents.last()->appendChild(adapterItem);
+						     rootItem);
+		QStringList devices = adapter->listDevices();
+
+		for (int i = 0; i < devices.count(); i++) {
+			Device *device = new Device(devices[i]);
+
+			QVariantMap props = device->getProperties();
+
+			QList<QVariant> columnData;
+			columnData << devices[i] << props.take("Name");
+			TreeItem *deviceItem = new TreeItem(columnData, device,
+							     adapterItem);
+			adapterItem->appendChild(deviceItem);
+		}
+
+		rootItem->appendChild(adapterItem);
 	}
 }
 

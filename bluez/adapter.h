@@ -14,7 +14,7 @@ public:
 	Adapter(Adapter &adapter);
 	~Adapter();
 	QVariantMap getProperties();
-	QList<QVariant> listDevices();
+	QStringList listDevices();
 
 private:
 	void setSignals();

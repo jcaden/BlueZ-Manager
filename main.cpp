@@ -51,6 +51,9 @@ int main(int argc, char *argv[])
     QTreeView view;
     view.setModel(&model);
     view.setWindowTitle(QObject::tr("DBus BlueZ test"));
+    for (int i = 0; i < view.model()->columnCount(); i++)
+	    view.resizeColumnToContents(i);
+    view.adjustSize();
     view.show();
     return app.exec();
 }

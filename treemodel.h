@@ -67,6 +67,9 @@ public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
+signals:
+	void modelChanged();
+
 private slots:
 	void adapterRemoved(QString path);
 	void adapterAdded(QString path);

@@ -43,6 +43,7 @@ Adapter::Adapter(Adapter &adapter) :
 
 Adapter::~Adapter()
 {
+	qDebug() << "Destroying adapter" << path;
 	delete this->path;
 }
 

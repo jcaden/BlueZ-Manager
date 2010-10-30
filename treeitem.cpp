@@ -64,6 +64,7 @@ TreeItem::TreeItem(const QList<QVariant> &data, QObject *userData, TreeItem *par
 TreeItem::~TreeItem()
 {
     qDeleteAll(childItems);
+//    delete privData;
 }
 
 void TreeItem::appendChild(TreeItem *item)

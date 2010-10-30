@@ -188,10 +188,14 @@ void TreeModel::setSignals()
 
 void TreeModel::adapterRemoved(QString path)
 {
-	qWarning() << "Adapter removed bis" << path;
+	qWarning() << "Adapter removed" << path;
+	setupModelData();
+	emit layoutChanged();
 }
 
 void TreeModel::adapterAdded(QString path)
 {
-	qWarning() << "Adapter added bis" << path;
+	qWarning() << "Adapter added" << path;
+	setupModelData();
+	emit layoutChanged();
 }

@@ -45,6 +45,7 @@
 */
 
 #include <QStringList>
+#include <QDebug>
 
 #include "treeitem.h"
 
@@ -52,6 +53,7 @@ TreeItem::TreeItem(const QList<QVariant> &data, TreeItem *parent)
 {
     parentItem = parent;
     itemData = data;
+    privData = NULL;
 }
 
 TreeItem::TreeItem(const QList<QVariant> &data, QObject *userData, TreeItem *parent)
@@ -64,7 +66,8 @@ TreeItem::TreeItem(const QList<QVariant> &data, QObject *userData, TreeItem *par
 TreeItem::~TreeItem()
 {
     qDeleteAll(childItems);
-    delete privData;
+    if (privData)
+	    delete privData;
 }
 
 void TreeItem::appendChild(TreeItem *item)

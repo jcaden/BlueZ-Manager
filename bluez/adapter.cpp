@@ -78,10 +78,11 @@ QMap<QString, QVariant> Adapter::getProperties()
 
 void Adapter::setSignals()
 {
-//	con.connect("org.bluez", "/", "org.bluez.Adapter", "AdapterRemoved",
-//		    this, SLOT(slotAdapterRemoved(QDBusObjectPath)));
-//	con.connect("org.bluez", "/", "org.bluez.Manager", "AdapterAdded",
-//		    this, SLOT(slotAdapterAdded(QDBusObjectPath)));
+	con.connect("org.bluez", path->toAscii().data(),
+		    "org.bluez.Adapter", "DeviceRemoved",
+		    this, SLOT(slotDeviceRemoved(QDBusObjectPath)));
+	con.connect("org.bluez", "/", "org.bluez.Manager", "DeviceCreated",
+		    this, SLOT(slotDeviceAdded(QDBusObjectPath)));
 }
 
 QStringList Adapter::listDevices()
@@ -111,4 +112,18 @@ QStringList Adapter::listDevices()
 	}
 
 	return qdbus_cast<QStringList>(reply.arguments()[0]);
+}
+
+void Adapter::slotDeviceRemoved(QDBusObjectPath path)
+{
+	qDebug() << "Device removed on adapter" << this->path << "with path"
+			<< path.path();
+	emit deviceRemoved(*this->path, path.path());
+}
+
+void Adapter::slotDeviceAdded(QDBusObjectPath path)
+{
+	qDebug() << "Device added on adapter" << this->path << "with path"
+			<< path.path();
+	emit deviceAdded(*this->path, path.path());
 }

@@ -73,12 +73,15 @@ signals:
 private slots:
 	void adapterRemoved(QString path);
 	void adapterAdded(QString path);
+	void deviceRemoved(QString adapPath, QString devPath);
+	void deviceAdded(QString adapPath, QString devPath);
 
 private:
 	void setupModelData();
 	QList<QVariant> getAdapters();
 	void setSignals();
 	void appendAdapter(QString path);
+	void appendDevice(TreeItem *parent, QString path);
 
 	TreeItem *rootItem;
 	Manager *manager;

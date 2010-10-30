@@ -170,7 +170,6 @@ void TreeModel::setupModelData()
 
 void TreeModel::setSignals()
 {
-	qDebug() << "Setting signals";
 	connect(manager, SIGNAL(adapterAdded(QString)), this,
 		SLOT(adapterAdded(QString)));
 	connect(manager, SIGNAL(adapterRemoved(QString)), this,
@@ -181,6 +180,11 @@ void TreeModel::appendAdapter(QString path)
 {
 	Adapter *adapter = new Adapter(path);
 
+	connect(adapter, SIGNAL(deviceAdded(QString, QString)), this,
+		SLOT(deviceAdded(QString, QString)));
+	connect(adapter, SIGNAL(deviceRemoved(QString, QString)), this,
+		SLOT(deviceRemoved(QString, QString)));
+
 	QVariantMap props = adapter->getProperties();
 
 	QList<QVariant> columnData;
@@ -190,18 +194,22 @@ void TreeModel::appendAdapter(QString path)
 	QStringList devices = adapter->listDevices();
 
 	for (int i = 0; i < devices.count(); i++) {
-		Device *device = new Device(devices[i]);
-
-		QVariantMap props = device->getProperties();
-
-		QList<QVariant> columnData;
-		columnData << devices[i] << props.take("Name");
-		TreeItem *deviceItem = new TreeItem(columnData, device,
-						     adapterItem);
-		adapterItem->appendChild(deviceItem);
+		appendDevice(adapterItem, devices[i]);
 	}
 
 	rootItem->appendChild(adapterItem);
+}
+
+void TreeModel::appendDevice(TreeItem *parent, QString path)
+{
+	Device *device = new Device(path);
+
+	QVariantMap props = device->getProperties();
+
+	QList<QVariant> columnData;
+	columnData << path << props.take("Name");
+	TreeItem *deviceItem = new TreeItem(columnData, device, parent);
+	parent->appendChild(deviceItem);
 }
 
 void TreeModel::adapterRemoved(QString path)
@@ -218,5 +226,30 @@ void TreeModel::adapterAdded(QString path)
 {
 	qWarning() << "Adapter added" << path;
 	appendAdapter(path);
+	emit layoutChanged();
+}
+
+void TreeModel::deviceRemoved(QString adapPath, QString devPath)
+{
+	qWarning() << "Device removed" << devPath;
+	for (int i = 0; i < rootItem->childCount(); i++) {
+		TreeItem *adapterItem = rootItem->child(i);
+		if (adapPath == adapterItem->data(0).toString()) {
+			for (int i = 0; i < adapterItem->childCount(); i++)
+				adapterItem->removeChild(i);
+		}
+	}
+	emit layoutChanged();
+}
+
+void TreeModel::deviceAdded(QString adapPath, QString devPath)
+{
+	qWarning() << "Device added" << devPath;
+	for (int i = 0; i < rootItem->childCount(); i++) {
+		TreeItem *adapterItem = rootItem->child(i);
+
+		if (adapPath == adapterItem->data(0).toString())
+			appendDevice(adapterItem, devPath);
+	}
 	emit layoutChanged();
 }

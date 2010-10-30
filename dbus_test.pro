@@ -10,7 +10,9 @@ INCLUDEPATH += .
 # Input
 HEADERS += treeitem.h treemodel.h \
     bluez/manager.h \
-    bluez/adapter.h
+    bluez/adapter.h \
+    bluez/device.h
 SOURCES += main.cpp treeitem.cpp treemodel.cpp \
     bluez/manager.cpp \
-    bluez/adapter.cpp
+    bluez/adapter.cpp \
+    bluez/device.cpp

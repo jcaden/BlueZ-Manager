@@ -23,9 +23,9 @@
 #include <QtDBus/QtDBus>
 #include <QDebug>
 
-#include "adapter.h"
+#include "device.h"
 
-Adapter::Adapter(QString path) :
+Device::Device(QString path) :
 	QObject(),
 	con(QDBusConnection::systemBus())
 {
@@ -33,7 +33,7 @@ Adapter::Adapter(QString path) :
 	setSignals();
 }
 
-Adapter::Adapter(Adapter &adapter) :
+Device::Device(Device &adapter) :
 		QObject(),
 		con(QDBusConnection::systemBus())
 {
@@ -41,20 +41,21 @@ Adapter::Adapter(Adapter &adapter) :
 	setSignals();
 }
 
-Adapter::~Adapter()
+Device::~Device()
 {
-	qDebug() << "Destroying adapter" << path->toAscii().data();
+	qDebug() << "Destroying device" << path->toAscii().data();
 	delete this->path;
 }
 
-QMap<QString, QVariant> Adapter::getProperties()
+QMap<QString, QVariant> Device::getProperties()
 {
 	QDBusMessage msg, reply;
 	QDBusConnection con = QDBusConnection::systemBus();
 	QMap<QString, QVariant> props;
 
-	msg = QDBusMessage::createMethodCall("org.bluez", path->toAscii().data(),
-					"org.bluez.Adapter", "GetProperties");
+	msg = QDBusMessage::createMethodCall("org.bluez",
+					path->toAscii().data(),
+					"org.bluez.Device", "GetProperties");
 	reply = con.call(msg, QDBus::Block, -1);
 
 	if (reply.type() == QDBusMessage::ErrorMessage) {
@@ -76,7 +77,7 @@ QMap<QString, QVariant> Adapter::getProperties()
 	return props;
 }
 
-void Adapter::setSignals()
+void Device::setSignals()
 {
 //	con.connect("org.bluez", "/", "org.bluez.Adapter", "AdapterRemoved",
 //		    this, SLOT(slotAdapterRemoved(QDBusObjectPath)));

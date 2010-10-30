@@ -235,8 +235,12 @@ void TreeModel::deviceRemoved(QString adapPath, QString devPath)
 	for (int i = 0; i < rootItem->childCount(); i++) {
 		TreeItem *adapterItem = rootItem->child(i);
 		if (adapPath == adapterItem->data(0).toString()) {
-			for (int i = 0; i < adapterItem->childCount(); i++)
-				adapterItem->removeChild(i);
+			for (int i = 0; i < adapterItem->childCount(); i++) {
+				TreeItem *deviceItem = adapterItem->child(i);
+
+				if (devPath == deviceItem->data(0).toString())
+					adapterItem->removeChild(i);
+			}
 		}
 	}
 	emit layoutChanged();

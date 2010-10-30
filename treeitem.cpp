@@ -51,28 +51,28 @@
 
 TreeItem::TreeItem(const QList<QVariant> &data, TreeItem *parent)
 {
-    parentItem = parent;
-    itemData = data;
-    privData = NULL;
+	parentItem = parent;
+	itemData = data;
+	privData = NULL;
 }
 
 TreeItem::TreeItem(const QList<QVariant> &data, QObject *userData, TreeItem *parent)
 {
-    parentItem = parent;
-    itemData = data;
-    privData = userData;
+	parentItem = parent;
+	itemData = data;
+	privData = userData;
 }
 
 TreeItem::~TreeItem()
 {
-    qDeleteAll(childItems);
-    if (privData)
-	    delete privData;
+	qDeleteAll(childItems);
+	if (privData)
+		delete privData;
 }
 
 void TreeItem::appendChild(TreeItem *item)
 {
-    childItems.append(item);
+	childItems.append(item);
 }
 
 void TreeItem::removeChild(int row)
@@ -83,39 +83,39 @@ void TreeItem::removeChild(int row)
 
 TreeItem *TreeItem::child(int row)
 {
-    return childItems.value(row);
+	return childItems.value(row);
 }
 
 int TreeItem::childCount() const
 {
-    return childItems.count();
+	return childItems.count();
 }
 
 int TreeItem::columnCount() const
 {
-    return itemData.count();
+	return itemData.count();
 }
 
 QVariant TreeItem::data(int column) const
 {
-    return itemData.value(column);
+	return itemData.value(column);
 }
 
 TreeItem *TreeItem::parent()
 {
-    return parentItem;
+	return parentItem;
 }
 
 int TreeItem::row() const
 {
-    if (parentItem)
-	return parentItem->childItems.indexOf(const_cast<TreeItem*>(this));
+	if (parentItem)
+		return parentItem->childItems.indexOf(const_cast<TreeItem*>(this));
 
-    return 0;
+	return 0;
 }
 
 QObject *TreeItem::getData() const
 {
-    return privData;
+	return privData;
 }
 

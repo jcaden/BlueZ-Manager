@@ -44,16 +44,16 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+	QApplication app(argc, argv);
 
-    TreeModel model;
+	TreeModel model;
 
-    QTreeView view;
-    view.setModel(&model);
-    view.setWindowTitle(QObject::tr("DBus BlueZ test"));
-    for (int i = 0; i < view.model()->columnCount(); i++)
-	    view.resizeColumnToContents(i);
-    view.adjustSize();
-    view.show();
-    return app.exec();
+	QTreeView view;
+	view.setModel(&model);
+	view.setWindowTitle(QObject::tr("DBus BlueZ test"));
+	for (int i = 0; i < view.model()->columnCount(); i++)
+		view.resizeColumnToContents(i);
+	view.adjustSize();
+	view.show();
+	return app.exec();
 }

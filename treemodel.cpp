@@ -164,29 +164,7 @@ void TreeModel::setupModelData()
 	// Perform a DBus call for get all the adapters
 	QStringList adapters = manager->getAdapters();
 	for (int i = 0; i < adapters.count(); i++) {
-		Adapter *adapter = new Adapter(adapters[i]);
-
-		QVariantMap props = adapter->getProperties();
-
-		QList<QVariant> columnData;
-		columnData << adapters.at(i) << props.take("Name");
-		TreeItem *adapterItem = new TreeItem(columnData, adapter,
-						     rootItem);
-		QStringList devices = adapter->listDevices();
-
-		for (int i = 0; i < devices.count(); i++) {
-			Device *device = new Device(devices[i]);
-
-			QVariantMap props = device->getProperties();
-
-			QList<QVariant> columnData;
-			columnData << devices[i] << props.take("Name");
-			TreeItem *deviceItem = new TreeItem(columnData, device,
-							     adapterItem);
-			adapterItem->appendChild(deviceItem);
-		}
-
-		rootItem->appendChild(adapterItem);
+		appendAdapter(adapters[i]);
 	}
 }
 
@@ -199,16 +177,46 @@ void TreeModel::setSignals()
 		SLOT(adapterRemoved(QString)));
 }
 
+void TreeModel::appendAdapter(QString path)
+{
+	Adapter *adapter = new Adapter(path);
+
+	QVariantMap props = adapter->getProperties();
+
+	QList<QVariant> columnData;
+	columnData << path << props.take("Name");
+	TreeItem *adapterItem = new TreeItem(columnData, adapter,
+					     rootItem);
+	QStringList devices = adapter->listDevices();
+
+	for (int i = 0; i < devices.count(); i++) {
+		Device *device = new Device(devices[i]);
+
+		QVariantMap props = device->getProperties();
+
+		QList<QVariant> columnData;
+		columnData << devices[i] << props.take("Name");
+		TreeItem *deviceItem = new TreeItem(columnData, device,
+						     adapterItem);
+		adapterItem->appendChild(deviceItem);
+	}
+
+	rootItem->appendChild(adapterItem);
+}
+
 void TreeModel::adapterRemoved(QString path)
 {
 	qWarning() << "Adapter removed" << path;
-	setupModelData();
+	for (int i = 0; i < rootItem->childCount(); i++) {
+		if (path == rootItem->child(i)->data(0).toString())
+			rootItem->removeChild(i);
+	}
 	emit layoutChanged();
 }
 
 void TreeModel::adapterAdded(QString path)
 {
 	qWarning() << "Adapter added" << path;
-	setupModelData();
+	appendAdapter(path);
 	emit layoutChanged();
 }

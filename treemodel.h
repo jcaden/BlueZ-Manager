@@ -78,6 +78,7 @@ private:
 	void setupModelData();
 	QList<QVariant> getAdapters();
 	void setSignals();
+	void appendAdapter(QString path);
 
 	TreeItem *rootItem;
 	Manager *manager;

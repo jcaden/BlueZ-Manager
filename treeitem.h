@@ -61,6 +61,8 @@ public:
 	int row() const;
 	TreeItem *parent();
 
+	void removeChild(int row);
+
 	QObject *getData() const;
 
 private:

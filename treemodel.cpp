@@ -164,7 +164,7 @@ void TreeModel::setupModelData()
 	parents << rootItem;
 
 	// Perform a DBus call for get all the adapters
-	QList<QString> adapters = manager->getAdapters();
+	QStringList adapters = manager->getAdapters();
 	for (int i = 0; i < adapters.count(); i++) {
 		Adapter *adapter = new Adapter(adapters[i]);
 
@@ -172,8 +172,9 @@ void TreeModel::setupModelData()
 
 		QList<QVariant> columnData;
 		columnData << adapters.at(i) << props.take("Name");
-		parents.last()->appendChild(new TreeItem(columnData, adapter,
-							 parents.last()));
+		TreeItem *adapterItem = new TreeItem(columnData, adapter,
+						     parents.last());
+		parents.last()->appendChild(adapterItem);
 	}
 }
 

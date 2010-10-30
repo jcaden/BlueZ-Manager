@@ -35,7 +35,7 @@ Manager::Manager() :
 		    this, SLOT(slotAdapterAdded(QDBusObjectPath)));
 }
 
-QList<QString> Manager::getAdapters()
+QStringList Manager::getAdapters()
 {
 	QDBusMessage msg, reply;
 	QDBusConnection con = QDBusConnection::systemBus();

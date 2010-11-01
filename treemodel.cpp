@@ -257,3 +257,8 @@ void TreeModel::deviceAdded(QString adapPath, QString devPath)
 	}
 	emit layoutChanged();
 }
+
+void TreeModel::clicked(const QModelIndex &index)
+{
+	qDebug() << index.sibling(index.row(), 0).data();
+}

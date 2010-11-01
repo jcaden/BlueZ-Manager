@@ -43,8 +43,9 @@
 
 #include <QList>
 #include <QVariant>
+#include <QModelIndex>
 
-class TreeItem
+class TreeItem : QModelIndex
 {
 public:
 	TreeItem(const QList<QVariant> &data, TreeItem *parent = 0);

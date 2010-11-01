@@ -75,6 +75,7 @@ private slots:
 	void adapterAdded(QString path);
 	void deviceRemoved(QString adapPath, QString devPath);
 	void deviceAdded(QString adapPath, QString devPath);
+	void clicked(const QModelIndex &);
 
 private:
 	void setupModelData();

@@ -55,5 +55,7 @@ int main(int argc, char *argv[])
 		view.resizeColumnToContents(i);
 	view.adjustSize();
 	view.show();
+	QObject::connect(&view, SIGNAL(clicked(const QModelIndex &)), &model,
+					SLOT(clicked(const QModelIndex &)));
 	return app.exec();
 }

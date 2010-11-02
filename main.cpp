@@ -41,21 +41,48 @@
 #include <QtGui>
 
 #include "treemodel.h"
+#include "adapterview.h"
+
+class MyWindow : public QWidget
+{
+public:
+	MyWindow(QWidget *parent = 0);
+};
+
+MyWindow::MyWindow(QWidget *parent)
+	: QWidget(parent)
+{
+	setWindowTitle(tr("DBus BlueZ test"));
+
+	QTreeView *view = new QTreeView;
+	TreeModel *model = new TreeModel(view);
+
+	view->setModel(model);
+	for (int i = 0; i < view->model()->columnCount(); i++)
+		view->resizeColumnToContents(i);
+	view->adjustSize();
+	view->show();
+
+	connect(view, SIGNAL(clicked(const QModelIndex &)), model,
+					SLOT(clicked(const QModelIndex &)));
+
+	AdapterView *adapterView = new AdapterView;
+
+	connect(model, SIGNAL(adapterSelected(QString)), adapterView,
+			 SLOT(setAdapter(QString)));
+
+	QGridLayout *gridLayout = new QGridLayout;
+
+	gridLayout->addWidget(view, 0, 0);
+	gridLayout->addWidget(adapterView, 0, 1);
+	setLayout(gridLayout);
+}
 
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-
-	TreeModel model;
-
-	QTreeView view;
-	view.setModel(&model);
-	view.setWindowTitle(QObject::tr("DBus BlueZ test"));
-	for (int i = 0; i < view.model()->columnCount(); i++)
-		view.resizeColumnToContents(i);
-	view.adjustSize();
-	view.show();
-	QObject::connect(&view, SIGNAL(clicked(const QModelIndex &)), &model,
-					SLOT(clicked(const QModelIndex &)));
+	MyWindow window;
+	window.setGeometry(100, 100, 500, 355);
+	window.show();
 	return app.exec();
 }

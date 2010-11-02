@@ -178,20 +178,19 @@ void TreeModel::setSignals()
 
 void TreeModel::appendAdapter(QString path)
 {
-	Adapter *adapter = new Adapter(path);
+	Adapter adapter(path);
 
-	connect(adapter, SIGNAL(deviceAdded(QString, QString)), this,
+	connect(&adapter, SIGNAL(deviceAdded(QString, QString)), this,
 		SLOT(deviceAdded(QString, QString)));
-	connect(adapter, SIGNAL(deviceRemoved(QString, QString)), this,
+	connect(&adapter, SIGNAL(deviceRemoved(QString, QString)), this,
 		SLOT(deviceRemoved(QString, QString)));
 
-	QVariantMap props = adapter->getProperties();
+	QVariantMap props = adapter.getProperties();
 
 	QList<QVariant> columnData;
 	columnData << path << props.take("Name");
-	TreeItem *adapterItem = new TreeItem(columnData, adapter,
-					     rootItem);
-	QStringList devices = adapter->listDevices();
+	TreeItem *adapterItem = new TreeItem(columnData, rootItem);
+	QStringList devices = adapter.listDevices();
 
 	for (int i = 0; i < devices.count(); i++) {
 		appendDevice(adapterItem, devices[i]);
@@ -202,13 +201,13 @@ void TreeModel::appendAdapter(QString path)
 
 void TreeModel::appendDevice(TreeItem *parent, QString path)
 {
-	Device *device = new Device(path);
+	Device device(path);
 
-	QVariantMap props = device->getProperties();
+	QVariantMap props = device.getProperties();
 
 	QList<QVariant> columnData;
 	columnData << path << props.take("Name");
-	TreeItem *deviceItem = new TreeItem(columnData, device, parent);
+	TreeItem *deviceItem = new TreeItem(columnData, parent);
 	parent->appendChild(deviceItem);
 }
 
@@ -260,5 +259,13 @@ void TreeModel::deviceAdded(QString adapPath, QString devPath)
 
 void TreeModel::clicked(const QModelIndex &index)
 {
-	qDebug() << index.sibling(index.row(), 0).data();
+	QString path = index.sibling(index.row(),0).data().toString();
+
+	if (index.parent().data().toString() == "") {
+		emit adapterSelected(path);
+		return;
+	}
+
+	emit deviceSelected(path);
+	emit adapterSelected(index.parent().data().toString());
 }

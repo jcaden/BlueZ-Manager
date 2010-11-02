@@ -69,6 +69,8 @@ public:
 
 signals:
 	void modelChanged();
+	void adapterSelected(const QString path);
+	void deviceSelected(const QString path);
 
 private slots:
 	void adapterRemoved(QString path);

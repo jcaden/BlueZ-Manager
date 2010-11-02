@@ -11,8 +11,13 @@ INCLUDEPATH += .
 HEADERS += treeitem.h treemodel.h \
     bluez/manager.h \
     bluez/adapter.h \
-    bluez/device.h
+    bluez/device.h \
+    adapterview.h
 SOURCES += main.cpp treeitem.cpp treemodel.cpp \
     bluez/manager.cpp \
     bluez/adapter.cpp \
-    bluez/device.cpp
+    bluez/device.cpp \
+    adapterview.cpp
+
+FORMS += \
+    adapterview.ui

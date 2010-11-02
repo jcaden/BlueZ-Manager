@@ -53,21 +53,11 @@ TreeItem::TreeItem(const QList<QVariant> &data, TreeItem *parent)
 {
 	parentItem = parent;
 	itemData = data;
-	privData = NULL;
-}
-
-TreeItem::TreeItem(const QList<QVariant> &data, QObject *userData, TreeItem *parent)
-{
-	parentItem = parent;
-	itemData = data;
-	privData = userData;
 }
 
 TreeItem::~TreeItem()
 {
 	qDeleteAll(childItems);
-	if (privData)
-		delete privData;
 }
 
 void TreeItem::appendChild(TreeItem *item)
@@ -113,9 +103,3 @@ int TreeItem::row() const
 
 	return 0;
 }
-
-QObject *TreeItem::getData() const
-{
-	return privData;
-}
-

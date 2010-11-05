@@ -28,9 +28,7 @@ private slots:
 private:
 	void setSignals();
 
-	QString *path;
-	QDBusConnection con;
-
+	QDBusInterface adapter;
 };
 
 #endif // ADAPTER_H

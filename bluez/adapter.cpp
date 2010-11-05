@@ -27,34 +27,28 @@
 
 Adapter::Adapter(QString path) :
 	QObject(),
-	con(QDBusConnection::systemBus())
+	adapter("org.bluez", path,
+		"org.bluez.Adapter", QDBusConnection::systemBus())
 {
-	this->path = new QString(path);
 	setSignals();
 }
 
 Adapter::Adapter(Adapter &adapter) :
 		QObject(),
-		con(QDBusConnection::systemBus())
+		adapter("org.bluez", adapter.adapter.path(),
+			"org.bluez.Adapter", QDBusConnection::systemBus())
 {
-	path = new QString(*adapter.path);
 	setSignals();
 }
 
 Adapter::~Adapter()
 {
-	qDebug() << "Destroying adapter" << path->toAscii().data();
-	delete this->path;
+	qDebug() << "Destroying adapter" << adapter.path();
 }
 
 QMap<QString, QVariant> Adapter::getProperties()
 {
-	QDBusMessage msg, reply;
-	QDBusConnection con = QDBusConnection::systemBus();
-
-	msg = QDBusMessage::createMethodCall("org.bluez", path->toAscii().data(),
-					"org.bluez.Adapter", "GetProperties");
-	reply = con.call(msg, QDBus::Block, -1);
+	QDBusMessage reply = adapter.call("GetProperties");
 
 	if (reply.type() == QDBusMessage::ErrorMessage) {
 		qWarning() << "Error reply received: " << reply.errorMessage();
@@ -76,22 +70,17 @@ QMap<QString, QVariant> Adapter::getProperties()
 
 void Adapter::setSignals()
 {
-	con.connect("org.bluez", path->toAscii().data(),
-		    "org.bluez.Adapter", "DeviceRemoved",
-		    this, SLOT(slotDeviceRemoved(QDBusObjectPath)));
-	con.connect("org.bluez", "/", "org.bluez.Manager", "DeviceCreated",
-		    this, SLOT(slotDeviceAdded(QDBusObjectPath)));
+	QDBusConnection::systemBus().connect("org.bluez",
+			adapter.path(), "org.bluez.Adapter", "DeviceRemoved",
+			this, SLOT(slotDeviceRemoved(QDBusObjectPath)));
+	QDBusConnection::systemBus().connect("org.bluez", "/",
+				"org.bluez.Manager", "DeviceCreated",
+				this, SLOT(slotDeviceAdded(QDBusObjectPath)));
 }
 
 QStringList Adapter::listDevices()
 {
-	QDBusMessage msg, reply;
-
-	msg = QDBusMessage::createMethodCall("org.bluez",
-					     path->toAscii().data(),
-					     "org.bluez.Adapter",
-					     "ListDevices");
-	reply = con.call(msg, QDBus::Block, -1);
+	QDBusMessage reply = adapter.call("ListDevices");
 
 	if (reply.type() == QDBusMessage::ErrorMessage) {
 		qWarning() << "Error reply received: " << reply.errorMessage();
@@ -113,23 +102,20 @@ QStringList Adapter::listDevices()
 
 void Adapter::slotDeviceRemoved(QDBusObjectPath path)
 {
-	qDebug() << "Device removed on adapter" << this->path << "with path"
+	qDebug() << "Device removed on adapter" << adapter.path() << "with path"
 			<< path.path();
-	emit deviceRemoved(*this->path, path.path());
+	emit deviceRemoved(adapter.path(), path.path());
 }
 
 void Adapter::slotDeviceAdded(QDBusObjectPath path)
 {
-	qDebug() << "Device added on adapter" << this->path << "with path"
+	qDebug() << "Device added on adapter" << adapter.path() << "with path"
 			<< path.path();
-	emit deviceAdded(*this->path, path.path());
+	emit deviceAdded(adapter.path(), path.path());
 }
 
 void Adapter::setProperty(QString key, QVariant value)
 {
-	QDBusInterface adapter("org.bluez", path->toAscii().data(),
-			   "org.bluez.Adapter", QDBusConnection::systemBus());
-
 	adapter.call("SetProperty", key,
 		     qVariantFromValue(QDBusVariant(value)));
 }

@@ -51,7 +51,6 @@ QMap<QString, QVariant> Adapter::getProperties()
 {
 	QDBusMessage msg, reply;
 	QDBusConnection con = QDBusConnection::systemBus();
-	QMap<QString, QVariant> props;
 
 	msg = QDBusMessage::createMethodCall("org.bluez", path->toAscii().data(),
 					"org.bluez.Adapter", "GetProperties");
@@ -59,21 +58,20 @@ QMap<QString, QVariant> Adapter::getProperties()
 
 	if (reply.type() == QDBusMessage::ErrorMessage) {
 		qWarning() << "Error reply received: " << reply.errorMessage();
-		return props;
+		return QVariantMap();
 	}
 
 	if (reply.arguments().count() != 1) {
 		qWarning() << "Unspected reply received";
-		return props;
+		return QVariantMap();
 	}
 
 	if (reply.signature() != "a{sv}") {
 		qWarning() << "Unspected reply signature";
-		return props;
+		return QVariantMap();
 	}
 
-	props = qdbus_cast<QVariantMap>(reply.arguments()[0]);
-	return props;
+	return qdbus_cast<QVariantMap>(reply.arguments()[0]);
 }
 
 void Adapter::setSignals()
@@ -88,7 +86,6 @@ void Adapter::setSignals()
 QStringList Adapter::listDevices()
 {
 	QDBusMessage msg, reply;
-	QDBusConnection con = QDBusConnection::systemBus();
 
 	msg = QDBusMessage::createMethodCall("org.bluez",
 					     path->toAscii().data(),
@@ -126,4 +123,13 @@ void Adapter::slotDeviceAdded(QDBusObjectPath path)
 	qDebug() << "Device added on adapter" << this->path << "with path"
 			<< path.path();
 	emit deviceAdded(*this->path, path.path());
+}
+
+void Adapter::setProperty(QString key, QVariant value)
+{
+	QDBusInterface adapter("org.bluez", path->toAscii().data(),
+			   "org.bluez.Adapter", QDBusConnection::systemBus());
+
+	adapter.call("SetProperty", key,
+		     qVariantFromValue(QDBusVariant(value)));
 }

@@ -15,6 +15,7 @@ public:
 	~Adapter();
 	QVariantMap getProperties();
 	QStringList listDevices();
+	void setProperty(QString key, QVariant value);
 
 signals:
 	void deviceAdded(QString adapPath, QString devPath);

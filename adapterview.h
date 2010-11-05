@@ -17,6 +17,10 @@ public:
 
 public slots:
     void setAdapter(const QString path);
+    void adapterRemoved(const QString path);
+
+private slots:
+    void setNameClicked();
 
 private:
     Ui::AdapterView *ui;

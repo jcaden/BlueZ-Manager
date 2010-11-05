@@ -54,7 +54,7 @@ MyWindow::MyWindow(QWidget *parent)
 {
 	setWindowTitle(tr("DBus BlueZ test"));
 
-	QTreeView *view = new QTreeView;
+	QTreeView *view = new QTreeView(this);
 	TreeModel *model = new TreeModel(view);
 
 	view->setModel(model);
@@ -63,17 +63,19 @@ MyWindow::MyWindow(QWidget *parent)
 	view->adjustSize();
 	view->show();
 
-	connect(view, SIGNAL(clicked(const QModelIndex &)), model,
-					SLOT(clicked(const QModelIndex &)));
+	connect(view, SIGNAL(clicked(const QModelIndex)), model,
+					SLOT(clicked(const QModelIndex)));
 
-	AdapterView *adapterView = new AdapterView;
+	AdapterView *adapterView = new AdapterView(this);
 
-	connect(model, SIGNAL(adapterSelected(QString)), adapterView,
-			 SLOT(setAdapter(QString)));
+	connect(model, SIGNAL(adapterSelected(const QString)), adapterView,
+			 SLOT(setAdapter(const QString)));
+	connect(model, SIGNAL(adapterRemoved(const QString)), adapterView,
+		SLOT(adapterRemoved(const QString)));
 
-	QGridLayout *gridLayout = new QGridLayout;
+	QGridLayout *gridLayout = new QGridLayout(this);
 
-	gridLayout->addWidget(view, 0, 0);
+	gridLayout->addWidget(view, 0, 0, 0, 1);
 	gridLayout->addWidget(adapterView, 0, 1);
 	setLayout(gridLayout);
 }

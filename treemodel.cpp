@@ -171,9 +171,9 @@ void TreeModel::setupModelData()
 void TreeModel::setSignals()
 {
 	connect(manager, SIGNAL(adapterAdded(QString)), this,
-		SLOT(adapterAdded(QString)));
+		SLOT(slotAdapterAdded(QString)));
 	connect(manager, SIGNAL(adapterRemoved(QString)), this,
-		SLOT(adapterRemoved(QString)));
+		SLOT(slotAdapterRemoved(QString)));
 }
 
 void TreeModel::appendAdapter(QString path)
@@ -211,17 +211,19 @@ void TreeModel::appendDevice(TreeItem *parent, QString path)
 	parent->appendChild(deviceItem);
 }
 
-void TreeModel::adapterRemoved(QString path)
+void TreeModel::slotAdapterRemoved(QString path)
 {
 	qWarning() << "Adapter removed" << path;
-	for (int i = 0; i < rootItem->childCount(); i++) {
-		if (path == rootItem->child(i)->data(0).toString())
+	for (int i = 0; i < rootItem->childCount(); i++)
+		if (path == rootItem->child(i)->data(0).toString()) {
 			rootItem->removeChild(i);
-	}
-	emit layoutChanged();
+			emit layoutChanged();
+			return;
+		}
+	emit adapterRemoved(path);
 }
 
-void TreeModel::adapterAdded(QString path)
+void TreeModel::slotAdapterAdded(QString path)
 {
 	qWarning() << "Adapter added" << path;
 	appendAdapter(path);
@@ -257,7 +259,7 @@ void TreeModel::deviceAdded(QString adapPath, QString devPath)
 	emit layoutChanged();
 }
 
-void TreeModel::clicked(const QModelIndex &index)
+void TreeModel::clicked(const QModelIndex index)
 {
 	QString path = index.sibling(index.row(),0).data().toString();
 

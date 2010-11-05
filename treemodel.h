@@ -71,13 +71,14 @@ signals:
 	void modelChanged();
 	void adapterSelected(const QString path);
 	void deviceSelected(const QString path);
+	void adapterRemoved(const QString path);
 
 private slots:
-	void adapterRemoved(QString path);
-	void adapterAdded(QString path);
+	void slotAdapterRemoved(QString path);
+	void slotAdapterAdded(QString path);
 	void deviceRemoved(QString adapPath, QString devPath);
 	void deviceAdded(QString adapPath, QString devPath);
-	void clicked(const QModelIndex &);
+	void clicked(const QModelIndex index);
 
 private:
 	void setupModelData();

@@ -67,7 +67,6 @@ void TreeItem::appendChild(TreeItem *item)
 
 void TreeItem::removeChild(int row)
 {
-	delete childItems.value(row);
 	childItems.removeAt(row);
 }
 

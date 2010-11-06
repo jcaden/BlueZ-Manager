@@ -27,54 +27,45 @@
 
 Device::Device(QString path) :
 	QObject(),
-	con(QDBusConnection::systemBus())
+	device("org.bluez", path,
+		"org.bluez.Device", QDBusConnection::systemBus())
 {
-	this->path = new QString(path);
 	setSignals();
 }
 
-Device::Device(Device &adapter) :
+Device::Device(Device &device) :
 		QObject(),
-		con(QDBusConnection::systemBus())
+		device("org.bluez", device.device.path(),
+			"org.bluez.Device", QDBusConnection::systemBus())
 {
-	path = new QString(*adapter.path);
 	setSignals();
 }
 
 Device::~Device()
 {
-	qDebug() << "Destroying device" << path->toAscii().data();
-	delete this->path;
+	qDebug() << "Destroying device" << device.path();
 }
 
-QMap<QString, QVariant> Device::getProperties()
+QVariantMap Device::getProperties()
 {
-	QDBusMessage msg, reply;
-	QDBusConnection con = QDBusConnection::systemBus();
-	QMap<QString, QVariant> props;
-
-	msg = QDBusMessage::createMethodCall("org.bluez",
-					path->toAscii().data(),
-					"org.bluez.Device", "GetProperties");
-	reply = con.call(msg, QDBus::Block, -1);
+	QDBusMessage reply = device.call("GetProperties");
 
 	if (reply.type() == QDBusMessage::ErrorMessage) {
 		qWarning() << "Error reply received: " << reply.errorMessage();
-		return props;
+		return QVariantMap();
 	}
 
 	if (reply.arguments().count() != 1) {
 		qWarning() << "Unspected reply received";
-		return props;
+		return QVariantMap();
 	}
 
 	if (reply.signature() != "a{sv}") {
 		qWarning() << "Unspected reply signature";
-		return props;
+		return QVariantMap();
 	}
 
-	props = qdbus_cast<QVariantMap>(reply.arguments()[0]);
-	return props;
+	return qdbus_cast<QVariantMap>(reply.arguments()[0]);
 }
 
 void Device::setSignals()

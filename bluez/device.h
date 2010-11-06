@@ -18,8 +18,7 @@ public:
 private:
 	void setSignals();
 
-	QString *path;
-	QDBusConnection con;
+	QDBusInterface device;
 
 };
 

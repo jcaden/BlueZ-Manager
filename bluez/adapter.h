@@ -20,10 +20,12 @@ public:
 signals:
 	void deviceAdded(QString adapPath, QString devPath);
 	void deviceRemoved(QString adapPath, QString devPath);
+	void propertyChanged(QString adapPath, QString key, QVariant value);
 
 private slots:
 	void slotDeviceRemoved(QDBusObjectPath path);
 	void slotDeviceAdded(QDBusObjectPath path);
+	void slotPropertyChanged(QString name, QDBusVariant value);
 
 private:
 	void setSignals();

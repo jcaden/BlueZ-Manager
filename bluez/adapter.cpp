@@ -73,9 +73,12 @@ void Adapter::setSignals()
 	QDBusConnection::systemBus().connect("org.bluez",
 			adapter.path(), "org.bluez.Adapter", "DeviceRemoved",
 			this, SLOT(slotDeviceRemoved(QDBusObjectPath)));
-	QDBusConnection::systemBus().connect("org.bluez", "/",
-				"org.bluez.Manager", "DeviceCreated",
-				this, SLOT(slotDeviceAdded(QDBusObjectPath)));
+	QDBusConnection::systemBus().connect("org.bluez", adapter.path(),
+			"org.bluez.Adapter", "DeviceCreated",
+			this, SLOT(slotDeviceAdded(QDBusObjectPath)));
+	QDBusConnection::systemBus().connect("org.bluez", adapter.path(),
+			"org.bluez.Adapter", "PropertyChanged",
+			this, SLOT(slotPropertyChanged(QString, QDBusVariant)));
 }
 
 QStringList Adapter::listDevices()
@@ -112,6 +115,14 @@ void Adapter::slotDeviceAdded(QDBusObjectPath path)
 	qDebug() << "Device added on adapter" << adapter.path() << "with path"
 			<< path.path();
 	emit deviceAdded(adapter.path(), path.path());
+}
+
+void Adapter::slotPropertyChanged(QString key, QDBusVariant value)
+{
+	QVariant variant = value.variant();
+
+	qDebug() << "Property changed:" << key << variant;
+	emit propertyChanged(adapter.path(), key, variant);
 }
 
 void Adapter::setProperty(QString key, QVariant value)

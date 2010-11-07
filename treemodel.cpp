@@ -56,6 +56,7 @@ TreeModel::TreeModel(QObject *parent)
 {
 	manager = new Manager();
 	rootItem = NULL;
+	adapterPath = NULL;
 	setupModelData();
 
 	setSignals();
@@ -65,6 +66,7 @@ TreeModel::~TreeModel()
 {
 	delete rootItem;
 	delete manager;
+	delete adapterPath;
 }
 
 int TreeModel::columnCount(const QModelIndex &parent) const
@@ -218,7 +220,7 @@ void TreeModel::slotAdapterRemoved(QString path)
 		if (path == rootItem->child(i)->data(0).toString()) {
 			rootItem->removeChild(i);
 			emit layoutChanged();
-			return;
+			break;
 		}
 	emit adapterRemoved(path);
 }
@@ -228,6 +230,8 @@ void TreeModel::slotAdapterAdded(QString path)
 	qWarning() << "Adapter added" << path;
 	appendAdapter(path);
 	emit layoutChanged();
+	if (adapterPath && path == *adapterPath)
+		emit adapterSelected(path);
 }
 
 void TreeModel::deviceRemoved(QString adapPath, QString devPath)
@@ -262,12 +266,16 @@ void TreeModel::deviceAdded(QString adapPath, QString devPath)
 void TreeModel::clicked(const QModelIndex index)
 {
 	QString path = index.sibling(index.row(),0).data().toString();
+	if (adapterPath)
+		delete adapterPath;
 
 	if (index.parent().data().toString() == "") {
+		adapterPath = new QString(path);
 		emit adapterSelected(path);
 		return;
 	}
 
 	emit deviceSelected(path);
+	adapterPath = new QString(index.parent().data().toString());
 	emit adapterSelected(index.parent().data().toString());
 }

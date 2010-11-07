@@ -89,6 +89,8 @@ private:
 
 	TreeItem *rootItem;
 	Manager *manager;
+
+	QString *adapterPath;
 };
 
 #endif

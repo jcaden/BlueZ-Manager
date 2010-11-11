@@ -46,6 +46,11 @@ Adapter::~Adapter()
 	qDebug() << "Destroying adapter" << adapter.path();
 }
 
+QString Adapter::getPath()
+{
+	return adapter.path();
+}
+
 QMap<QString, QVariant> Adapter::getProperties()
 {
 	QDBusMessage reply = adapter.call("GetProperties");

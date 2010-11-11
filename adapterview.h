@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include <bluez/adapter.h>
+
 namespace Ui {
     class AdapterView;
 }
@@ -24,7 +26,7 @@ private slots:
 
 private:
     Ui::AdapterView *ui;
-    QString *path;
+    Adapter *adapter;
 };
 
 #endif // ADAPTERVIEW_H

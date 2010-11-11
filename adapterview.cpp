@@ -9,25 +9,23 @@ AdapterView::AdapterView(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    path = NULL;
+    adapter = NULL;
 }
 
 AdapterView::~AdapterView()
 {
     delete ui;
-    if (path)
-	    delete path;
+    if (adapter)
+	    delete adapter;
 }
 
 void AdapterView::setAdapter(const QString path)
 {
-	Adapter adapter(path);
-	QVariantMap props = adapter.getProperties();
+	if (adapter)
+		delete adapter;
 
-	if (this->path)
-		delete this->path;
-
-	this->path = new QString(path);
+	adapter = new Adapter(path);
+	QVariantMap props = adapter->getProperties();
 
 	ui->nameEdit->setText(props.take("Name").toString());
 
@@ -37,11 +35,11 @@ void AdapterView::setAdapter(const QString path)
 
 void AdapterView::adapterRemoved(const QString path)
 {
-	if (!this->path || (path != this->path))
+	if (!adapter || (path != adapter->getPath()))
 		return;
 
-	delete this->path;
-	this->path = NULL;
+	delete adapter;
+	adapter = NULL;
 
 	ui->nameEdit->setText("");
 	this->disconnect(ui->nameButtom, SIGNAL(clicked()), this,
@@ -50,11 +48,10 @@ void AdapterView::adapterRemoved(const QString path)
 
 void AdapterView::setNameClicked()
 {
-	if (!path)
+	if (!adapter)
 		return;
 
 	QString name = ui->nameEdit->text();
 
-	Adapter adapter(*path);
-	adapter.setProperty("Name", name);
+	adapter->setProperty("Name", name);
 }

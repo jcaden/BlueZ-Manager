@@ -17,6 +17,8 @@ public:
 	QStringList listDevices();
 	void setProperty(QString key, QVariant value);
 
+	QString getPath();
+
 signals:
 	void deviceAdded(QString adapPath, QString devPath);
 	void deviceRemoved(QString adapPath, QString devPath);

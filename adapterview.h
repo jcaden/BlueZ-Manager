@@ -23,6 +23,9 @@ public slots:
 
 private slots:
     void setNameClicked();
+    void poweredClicked();
+    void propertyChanged(const QString apath, const QString key,
+						const QVariant value);
 
 private:
     Ui::AdapterView *ui;

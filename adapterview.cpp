@@ -29,8 +29,25 @@ void AdapterView::setAdapter(const QString path)
 
 	ui->nameEdit->setText(props.take("Name").toString());
 
+	ui->powered->setChecked(props.take("Powered").toBool());
+
 	connect(ui->nameButtom, SIGNAL(clicked()), this,
 		SLOT(setNameClicked()));
+
+	connect(ui->powered, SIGNAL(clicked()), this, SLOT(poweredClicked()));
+
+	connect(adapter, SIGNAL(propertyChanged(QString,QString,QVariant)),
+		this, SLOT(propertyChanged(QString, QString, QVariant)));
+}
+
+void AdapterView::propertyChanged(const QString apath, const QString key,
+					    const QVariant value)
+{
+	if (key == "Name")
+		ui->nameEdit->setText(value.toString());
+	else if (key == "Powered") {
+		ui->powered->setChecked(value.toBool());
+	}
 }
 
 void AdapterView::adapterRemoved(const QString path)
@@ -54,4 +71,12 @@ void AdapterView::setNameClicked()
 	QString name = ui->nameEdit->text();
 
 	adapter->setProperty("Name", name);
+}
+
+void AdapterView::poweredClicked()
+{
+	if (!adapter)
+		return;
+
+	adapter->setProperty("Powered", ui->powered->isChecked());
 }

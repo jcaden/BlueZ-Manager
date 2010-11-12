@@ -20,12 +20,15 @@ public:
     QString adapterPath();
 
 private slots:
-    void setNameClicked();
+    void applyClicked();
     void poweredClicked();
     void propertyChanged(const QString key, const QVariant value);
+    void sliderChanged(int value);
+    void comboChanged(int value);
 
 private:
     void setAddress(QString address);
+    void setVisibility(bool visible, int timeout);
 
     Ui::AdapterView *ui;
     Adapter adapter;

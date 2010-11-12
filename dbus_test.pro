@@ -8,13 +8,13 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += treeitem.h treemodel.h \
+HEADERS += \
     bluez/manager.h \
     bluez/adapter.h \
     bluez/device.h \
     adapterview.h \
     mainwindow.h
-SOURCES += main.cpp treeitem.cpp treemodel.cpp \
+SOURCES += main.cpp \
     bluez/manager.cpp \
     bluez/adapter.cpp \
     bluez/device.cpp \

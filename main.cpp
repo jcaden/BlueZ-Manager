@@ -43,6 +43,8 @@
 #include "treemodel.h"
 #include "adapterview.h"
 
+#include "mainwindow.h"
+
 class MyWindow : public QWidget
 {
 public:
@@ -83,8 +85,7 @@ MyWindow::MyWindow(QWidget *parent)
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-	MyWindow window;
-	window.setGeometry(100, 100, 500, 355);
+	MainWindow window;
 	window.show();
 	return app.exec();
 }

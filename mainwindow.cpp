@@ -7,10 +7,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent)
 {
 	setWindowTitle(tr("Bluetooth Manager"));
-	AdapterView *adapterView = new AdapterView(this);
 
 	QGridLayout *gridLayout = new QGridLayout(this);
 
-	gridLayout->addWidget(adapterView, 0, 0);
+	QStringList paths = manager.getAdapters();
+	foreach (QString path, paths) {
+		AdapterView *adapterView = new AdapterView(this);
+
+		gridLayout->addWidget(adapterView, adapters.count(), 0);
+		adapters.append(adapterView);
+		adapterView->setAdapter(path);
+	}
+
 	setLayout(gridLayout);
 }

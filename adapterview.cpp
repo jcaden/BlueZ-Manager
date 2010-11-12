@@ -59,3 +59,8 @@ void AdapterView::setAddress(QString address)
 {
 	ui->header->setTitle("Adapter (" + address + ")");
 }
+
+QString AdapterView::adapterPath()
+{
+	return adapter.getPath();
+}

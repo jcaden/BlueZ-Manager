@@ -15,9 +15,15 @@ signals:
 
 public slots:
 
+private slots:
+    void adapterRemoved(QString path);
+    void adapterAdded(QString path);
+
 private:
     Manager manager;
     QList<AdapterView *> adapters;
+
+    AdapterView *getAdapterView(const QString path);
 };
 
 #endif // MAINWINDOW_H

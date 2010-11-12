@@ -17,6 +17,8 @@ public:
     explicit AdapterView(const QString path, QWidget *parent = 0);
     ~AdapterView();
 
+    QString adapterPath();
+
 private slots:
     void setNameClicked();
     void poweredClicked();

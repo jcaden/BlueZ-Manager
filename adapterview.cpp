@@ -31,6 +31,8 @@ void AdapterView::setAdapter(const QString path)
 
 	ui->powered->setChecked(props.take("Powered").toBool());
 
+	setAddress(props.take("Address").toString());
+
 	connect(ui->nameButtom, SIGNAL(clicked()), this,
 		SLOT(setNameClicked()));
 
@@ -47,6 +49,8 @@ void AdapterView::propertyChanged(const QString apath, const QString key,
 		ui->nameEdit->setText(value.toString());
 	else if (key == "Powered") {
 		ui->powered->setChecked(value.toBool());
+	} else if (key == "Address") {
+		setAddress(value.toString());
 	}
 }
 
@@ -79,4 +83,9 @@ void AdapterView::poweredClicked()
 		return;
 
 	adapter->setProperty("Powered", ui->powered->isChecked());
+}
+
+void AdapterView::setAddress(QString address)
+{
+	ui->header->setTitle("Adapter (" + address + ")");
 }

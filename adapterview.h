@@ -28,6 +28,8 @@ private slots:
 						const QVariant value);
 
 private:
+    void setAddress(QString address);
+
     Ui::AdapterView *ui;
     Adapter *adapter;
 };

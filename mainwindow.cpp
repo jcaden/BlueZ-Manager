@@ -12,11 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	QStringList paths = manager.getAdapters();
 	foreach (QString path, paths) {
-		AdapterView *adapterView = new AdapterView(this);
+		AdapterView *adapterView = new AdapterView(path, this);
 
 		gridLayout->addWidget(adapterView, adapters.count(), 0);
 		adapters.append(adapterView);
-		adapterView->setAdapter(path);
 	}
 
 	setLayout(gridLayout);

@@ -14,24 +14,19 @@ class AdapterView : public QWidget
     Q_OBJECT
 
 public:
-    explicit AdapterView(QWidget *parent = 0);
+    explicit AdapterView(const QString path, QWidget *parent = 0);
     ~AdapterView();
-
-public slots:
-    void setAdapter(const QString path);
-    void adapterRemoved(const QString path);
 
 private slots:
     void setNameClicked();
     void poweredClicked();
-    void propertyChanged(const QString apath, const QString key,
-						const QVariant value);
+    void propertyChanged(const QString key, const QVariant value);
 
 private:
     void setAddress(QString address);
 
     Ui::AdapterView *ui;
-    Adapter *adapter;
+    Adapter adapter;
 };
 
 #endif // ADAPTERVIEW_H

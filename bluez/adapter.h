@@ -20,9 +20,9 @@ public:
 	QString getPath();
 
 signals:
-	void deviceAdded(QString adapPath, QString devPath);
-	void deviceRemoved(QString adapPath, QString devPath);
-	void propertyChanged(QString adapPath, QString key, QVariant value);
+	void deviceAdded(QString devPath);
+	void deviceRemoved(QString devPath);
+	void propertyChanged(QString key, QVariant value);
 
 private slots:
 	void slotDeviceRemoved(QDBusObjectPath path);

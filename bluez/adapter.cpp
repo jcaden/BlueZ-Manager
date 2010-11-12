@@ -112,14 +112,14 @@ void Adapter::slotDeviceRemoved(QDBusObjectPath path)
 {
 	qDebug() << "Device removed on adapter" << adapter.path() << "with path"
 			<< path.path();
-	emit deviceRemoved(adapter.path(), path.path());
+	emit deviceRemoved(path.path());
 }
 
 void Adapter::slotDeviceAdded(QDBusObjectPath path)
 {
 	qDebug() << "Device added on adapter" << adapter.path() << "with path"
 			<< path.path();
-	emit deviceAdded(adapter.path(), path.path());
+	emit deviceAdded(path.path());
 }
 
 void Adapter::slotPropertyChanged(QString key, QDBusVariant value)
@@ -127,7 +127,7 @@ void Adapter::slotPropertyChanged(QString key, QDBusVariant value)
 	QVariant variant = value.variant();
 
 	qDebug() << "Property changed:" << key << variant;
-	emit propertyChanged(adapter.path(), key, variant);
+	emit propertyChanged(key, variant);
 }
 
 void Adapter::setProperty(QString key, QVariant value)

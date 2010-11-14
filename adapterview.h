@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include <deviceview.h>
+#include <deviceswindow.h>
 #include <bluez/adapter.h>
 
 namespace Ui {
@@ -29,9 +31,12 @@ private slots:
 private:
     void setAddress(QString address);
     void setVisibility(bool visible, int timeout);
+    void showDevices(QStringList devicesPaths);
 
     Ui::AdapterView *ui;
     Adapter adapter;
+    QList<DeviceView *> devices;
+    DevicesWindow *devicesWindow;
 };
 
 #endif // ADAPTERVIEW_H

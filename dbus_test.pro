@@ -13,13 +13,19 @@ HEADERS += \
     bluez/adapter.h \
     bluez/device.h \
     adapterview.h \
-    mainwindow.h
+    mainwindow.h \
+    deviceview.h \
+    deviceswindow.h
 SOURCES += main.cpp \
     bluez/manager.cpp \
     bluez/adapter.cpp \
     bluez/device.cpp \
     adapterview.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    deviceview.cpp \
+    deviceswindow.cpp
 
 FORMS += \
-    adapterview.ui
+    adapterview.ui \
+    deviceview.ui \
+    deviceswindow.ui

@@ -44,11 +44,26 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 
     connect(ui->timeout, SIGNAL(valueChanged(int)), this,
 	    SLOT(sliderChanged(int)));
+
+    showDevices(adapter.listDevices());
 }
 
 AdapterView::~AdapterView()
 {
     delete ui;
+}
+
+void AdapterView::showDevices(QStringList devicesPaths)
+{
+	devicesWindow = new DevicesWindow(this);
+	foreach (QString path, devicesPaths) {
+		DeviceView *deviceView = new DeviceView(path, this);
+		devicesWindow->addWidget(deviceView);
+		devices.append(deviceView);
+	}
+	devicesWindow->setWindowTitle(tr("Devices for adapter ") +
+				      ui->nameEdit->text());
+	devicesWindow->show();
 }
 
 void AdapterView::setVisibility(bool visible, int timeout)

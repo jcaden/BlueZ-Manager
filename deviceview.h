@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include "bluez/device.h"
+
 namespace Ui {
     class DeviceView;
 }
@@ -17,6 +19,7 @@ public:
 
 private:
     Ui::DeviceView *ui;
+    Device device;
 };
 
 #endif // DEVICEVIEW_H

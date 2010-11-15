@@ -36,6 +36,12 @@ public:
 	QVariantMap getProperties();
 	QString getPath();
 
+signals:
+	void propertyChanged(QString name, QVariant value);
+
+private slots:
+	void slotPropertyChanged(QString name, QDBusVariant value);
+
 private:
 	void setSignals();
 

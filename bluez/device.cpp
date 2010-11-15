@@ -72,8 +72,15 @@ QString Device::getPath()
 
 void Device::setSignals()
 {
-//	con.connect("org.bluez", "/", "org.bluez.Adapter", "AdapterRemoved",
-//		    this, SLOT(slotAdapterRemoved(QDBusObjectPath)));
-//	con.connect("org.bluez", "/", "org.bluez.Manager", "AdapterAdded",
-//		    this, SLOT(slotAdapterAdded(QDBusObjectPath)));
+	QDBusConnection::systemBus().connect("org.bluez", device.path(),
+			"org.bluez.Device", "PropertyChanged",
+			this, SLOT(slotPropertyChanged(QString, QDBusVariant)));
+}
+
+void Device::slotPropertyChanged(QString name, QDBusVariant value)
+{
+	QVariant variant = value.variant();
+
+	qDebug() << "Device property changed:" << name << variant;
+	emit propertyChanged(name, variant);
 }

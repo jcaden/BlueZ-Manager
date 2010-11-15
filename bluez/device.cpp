@@ -68,6 +68,11 @@ QVariantMap Device::getProperties()
 	return qdbus_cast<QVariantMap>(reply.arguments()[0]);
 }
 
+QString Device::getPath()
+{
+	return device.path();
+}
+
 void Device::setSignals()
 {
 //	con.connect("org.bluez", "/", "org.bluez.Adapter", "AdapterRemoved",

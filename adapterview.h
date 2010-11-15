@@ -27,11 +27,14 @@ private slots:
     void propertyChanged(const QString key, const QVariant value);
     void sliderChanged(int value);
     void comboChanged(int value);
+    void deviceRemoved(QString path);
+    void deviceAdded(QString path);
 
 private:
     void setAddress(QString address);
     void setVisibility(bool visible, int timeout);
     void showDevices(QStringList devicesPaths);
+    DeviceView *getDeviceView(const QString path);
 
     Ui::AdapterView *ui;
     Adapter adapter;

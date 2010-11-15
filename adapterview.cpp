@@ -45,6 +45,12 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
     connect(ui->timeout, SIGNAL(valueChanged(int)), this,
 	    SLOT(sliderChanged(int)));
 
+    connect(&adapter, SIGNAL(deviceRemoved(QString)), this,
+	    SLOT(deviceRemoved(QString)));
+
+    connect(&adapter, SIGNAL(deviceAdded(QString)), this,
+	    SLOT(deviceAdded(QString)));
+
     showDevices(qdbus_cast<QStringList>(props.take("Devices")));
 }
 
@@ -169,4 +175,33 @@ void AdapterView::comboChanged(int value)
 QString AdapterView::adapterPath()
 {
 	return adapter.getPath();
+}
+
+DeviceView *AdapterView::getDeviceView(const QString path)
+{
+	foreach (DeviceView *view, devices) {
+		if (view->devicePath() == path)
+			return view;
+	}
+
+	return NULL;
+}
+
+void AdapterView::deviceRemoved(QString path)
+{
+	DeviceView *view = getDeviceView(path);
+	devices.removeAll(view);
+
+	devicesWindow->layout()->removeWidget(view);
+	adjustSize();
+	delete view;
+}
+
+void AdapterView::deviceAdded(QString path)
+{
+	DeviceView *deviceView = new DeviceView(path, this);
+
+	devicesWindow->layout()->addWidget(deviceView);
+	devicesWindow->adjustSize();
+	devices.append(deviceView);
 }

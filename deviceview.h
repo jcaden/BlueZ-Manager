@@ -16,6 +16,7 @@ class DeviceView : public QWidget
 public:
     explicit DeviceView(QString path, QWidget *parent = 0);
     ~DeviceView();
+    QString devicePath();
 
 private:
     Ui::DeviceView *ui;

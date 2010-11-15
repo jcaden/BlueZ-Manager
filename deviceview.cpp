@@ -19,3 +19,8 @@ DeviceView::~DeviceView()
 {
     delete ui;
 }
+
+QString DeviceView::devicePath()
+{
+	return device.getPath();
+}

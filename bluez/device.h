@@ -14,6 +14,7 @@ public:
 	Device(Device &device);
 	~Device();
 	QVariantMap getProperties();
+	QString getPath();
 
 private:
 	void setSignals();

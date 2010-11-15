@@ -51,7 +51,10 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
     connect(&adapter, SIGNAL(deviceAdded(QString)), this,
 	    SLOT(deviceAdded(QString)));
 
-    showDevices(qdbus_cast<QStringList>(props["Devices"]),
+    connect(ui->showDevices, SIGNAL(clicked(bool)), this,
+	    SLOT(showDevicesClicked(bool)));
+
+    createDevicesView(qdbus_cast<QStringList>(props["Devices"]),
 		props["Name"].toString());
 }
 
@@ -60,7 +63,7 @@ AdapterView::~AdapterView()
     delete ui;
 }
 
-void AdapterView::showDevices(QStringList devicesPaths, QString name)
+void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
 {
 	devicesWindow = new DevicesWindow(this);
 	foreach (QString path, devicesPaths) {
@@ -70,7 +73,6 @@ void AdapterView::showDevices(QStringList devicesPaths, QString name)
 	}
 	devicesWindow->setWindowTitle(tr("Devices for adapter ") +
 				      name);
-	devicesWindow->show();
 }
 
 void AdapterView::setVisibility(bool visible, int timeout)
@@ -208,4 +210,17 @@ void AdapterView::deviceAdded(QString path)
 	devicesWindow->layout()->addWidget(deviceView);
 	devicesWindow->adjustSize();
 	devices.append(deviceView);
+}
+
+void AdapterView::showDevicesClicked(bool checked)
+{
+	if (checked) {
+		ui->showDevices->setText(tr("Hide devices"));
+		devicesWindow->show();
+		connect(devicesWindow, SIGNAL(finished(int)), ui->showDevices,
+			SLOT(click()));
+	} else {
+		ui->showDevices->setText(tr("Show devices"));
+		devicesWindow->hide();
+	}
 }

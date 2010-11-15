@@ -29,11 +29,12 @@ private slots:
     void comboChanged(int value);
     void deviceRemoved(QString path);
     void deviceAdded(QString path);
+    void showDevicesClicked(bool checked);
 
 private:
     void setAddress(QString address);
     void setVisibility(bool visible, int timeout);
-    void showDevices(QStringList devicesPaths, QString name);
+    void createDevicesView(QStringList devicesPaths, QString name);
     DeviceView *getDeviceView(const QString path);
 
     Ui::AdapterView *ui;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>DevicesWindow</class>
- <widget class="QDialog" name="DevicesWindow">
+ <widget class="QWidget" name="DevicesWindow">
   <property name="geometry">
    <rect>
     <x>0</x>

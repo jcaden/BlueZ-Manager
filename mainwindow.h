@@ -22,6 +22,7 @@ private slots:
 private:
     Manager manager;
     QList<AdapterView *> adapters;
+    QSpacerItem *spacer;
 
     AdapterView *getAdapterView(const QString path);
 };

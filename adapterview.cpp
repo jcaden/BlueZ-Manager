@@ -61,6 +61,7 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 AdapterView::~AdapterView()
 {
     delete ui;
+    delete spacer;
 }
 
 void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
@@ -68,9 +69,13 @@ void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
 	devicesWindow = new DevicesWindow(this);
 	foreach (QString path, devicesPaths) {
 		DeviceView *deviceView = new DeviceView(path, this);
-		devicesWindow->addWidget(deviceView);
+		devicesWindow->layout()->addWidget(deviceView);
 		devices.append(deviceView);
 	}
+
+	spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
+				 QSizePolicy::MinimumExpanding);
+	devicesWindow->layout()->addItem(spacer);
 	devicesWindow->setWindowTitle(tr("Devices for adapter ") +
 				      name);
 }
@@ -199,7 +204,6 @@ void AdapterView::deviceRemoved(QString path)
 	devices.removeAll(view);
 
 	devicesWindow->layout()->removeWidget(view);
-	adjustSize();
 	delete view;
 }
 
@@ -207,8 +211,9 @@ void AdapterView::deviceAdded(QString path)
 {
 	DeviceView *deviceView = new DeviceView(path, this);
 
+	devicesWindow->layout()->removeItem(spacer);
 	devicesWindow->layout()->addWidget(deviceView);
-	devicesWindow->adjustSize();
+	devicesWindow->layout()->addItem(spacer);
 	devices.append(deviceView);
 }
 

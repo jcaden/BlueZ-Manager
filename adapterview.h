@@ -1,7 +1,7 @@
 #ifndef ADAPTERVIEW_H
 #define ADAPTERVIEW_H
 
-#include <QWidget>
+#include <QtGui>
 
 #include <deviceview.h>
 #include <deviceswindow.h>
@@ -41,6 +41,7 @@ private:
     Adapter adapter;
     QList<DeviceView *> devices;
     DevicesWindow *devicesWindow;
+    QSpacerItem *spacer;
 };
 
 #endif // ADAPTERVIEW_H

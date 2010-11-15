@@ -34,7 +34,6 @@ public:
 	Adapter(Adapter &adapter);
 	~Adapter();
 	QVariantMap getProperties();
-	QStringList listDevices();
 	void setProperty(QString key, QVariant value);
 
 	QString getPath();

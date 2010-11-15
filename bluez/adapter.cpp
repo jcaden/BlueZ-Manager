@@ -83,28 +83,6 @@ void Adapter::setSignals()
 			this, SLOT(slotPropertyChanged(QString, QDBusVariant)));
 }
 
-QStringList Adapter::listDevices()
-{
-	QDBusMessage reply = adapter.call("ListDevices");
-
-	if (reply.type() == QDBusMessage::ErrorMessage) {
-		qWarning() << "Error reply received: " << reply.errorMessage();
-		return QStringList();
-	}
-
-	if (reply.arguments().count() != 1) {
-		qWarning() << "Unspected reply received";
-		return QStringList();
-	}
-
-	if (reply.signature() != "ao") {
-		qWarning() << "Unspected reply signature";
-		return QStringList();
-	}
-
-	return qdbus_cast<QStringList>(reply.arguments()[0]);
-}
-
 void Adapter::slotDeviceRemoved(QDBusObjectPath path)
 {
 	qDebug() << "Device removed on adapter" << adapter.path() << "with path"

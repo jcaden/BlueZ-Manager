@@ -18,18 +18,18 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 
     QVariantMap props = adapter.getProperties();
 
-    ui->nameEdit->setText(props.take("Name").toString());
+    ui->nameEdit->setText(props["Name"].toString());
 
-    ui->powered->setChecked(props.take("Powered").toBool());
+    ui->powered->setChecked(props["Powered"].toBool());
 
-    setAddress(props.take("Address").toString());
+    setAddress(props["Address"].toString());
 
     ui->visibility->addItem(tr("Hidden"));
     ui->visibility->addItem(tr("Always visible"));
     ui->visibility->addItem(tr("Temporaly visible"));
 
-    setVisibility(props.take("Discoverable").toBool(),
-		  props.take("DiscoverableTimeout").toInt());
+    setVisibility(props["Discoverable"].toBool(),
+		  props["DiscoverableTimeout"].toInt());
 
     connect(ui->apply, SIGNAL(clicked()), this,
 	    SLOT(applyClicked()));
@@ -51,8 +51,8 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
     connect(&adapter, SIGNAL(deviceAdded(QString)), this,
 	    SLOT(deviceAdded(QString)));
 
-    showDevices(qdbus_cast<QStringList>(props.take("Devices")),
-		props.take("Name").toString());
+    showDevices(qdbus_cast<QStringList>(props["Devices"]),
+		props["Name"].toString());
 }
 
 AdapterView::~AdapterView()

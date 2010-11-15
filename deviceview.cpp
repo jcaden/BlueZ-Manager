@@ -10,9 +10,9 @@ DeviceView::DeviceView(QString path, QWidget *parent) :
 
     QVariantMap props = device.getProperties();
 
-    ui->device->setTitle(props.take("Name").toString());
-    ui->address->setText(props.take("Address").toString());
-    ui->checkBox->setChecked(props.take("Connected").toBool());
+    ui->device->setTitle(props["Name"].toString());
+    ui->address->setText(props["Address"].toString());
+    ui->checkBox->setChecked(props["Connected"].toBool());
 }
 
 DeviceView::~DeviceView()

@@ -1,0 +1,9 @@
+This program is a bluetooth manager for BlueZ.
+
+How to compile:
+
+run:
+
+$qmake
+$make
+

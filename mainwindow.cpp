@@ -30,7 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	QVBoxLayout *vLayout = new QVBoxLayout(this);
 
-	QStringList paths = manager.getAdapters();
+	QStringList paths = qdbus_cast<QStringList>(
+					manager.getProperties()["Adapters"]);
 	foreach (QString path, paths) {
 		AdapterView *adapterView = new AdapterView(path, this);
 

@@ -30,7 +30,7 @@ class Manager : public QObject
 
 public:
 	Manager();
-	QStringList getAdapters();
+	QVariantMap getProperties();
 
 signals:
 	void adapterRemoved(QString path);
@@ -41,7 +41,7 @@ private slots:
 	void slotAdapterAdded(QDBusObjectPath path);
 
 private:
-	QDBusConnection con;
+	QDBusInterface manager;
 
 };
 

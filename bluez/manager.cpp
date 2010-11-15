@@ -25,40 +25,37 @@
 
 Manager::Manager() :
 	QObject(),
-	con(QDBusConnection::systemBus())
+	manager("org.bluez", "/", "org.bluez.Manager",
+		QDBusConnection::systemBus())
 {
-	con.connect("org.bluez", "/", "org.bluez.Manager", "AdapterRemoved",
-		    this, SLOT(slotAdapterRemoved(QDBusObjectPath)));
-	con.connect("org.bluez", "/", "org.bluez.Manager", "AdapterAdded",
-		    this, SLOT(slotAdapterAdded(QDBusObjectPath)));
+	QDBusConnection::systemBus().connect("org.bluez", "/",
+			"org.bluez.Manager", "AdapterRemoved", this,
+			SLOT(slotAdapterRemoved(QDBusObjectPath)));
+	QDBusConnection::systemBus().connect("org.bluez", "/",
+			"org.bluez.Manager", "AdapterAdded", this,
+			SLOT(slotAdapterAdded(QDBusObjectPath)));
 }
 
-QStringList Manager::getAdapters()
+QVariantMap Manager::getProperties()
 {
-	QDBusMessage msg, reply;
-	QDBusConnection con = QDBusConnection::systemBus();
-	QList<QString> adapters;
-
-	msg = QDBusMessage::createMethodCall("org.bluez", "/",
-					"org.bluez.Manager", "ListAdapters");
-	reply = con.call(msg, QDBus::Block, -1);
+	QDBusMessage reply = manager.call("GetProperties");
 
 	if (reply.type() == QDBusMessage::ErrorMessage) {
 		qWarning() << "Error reply received: " << reply.errorMessage();
-		return adapters;
+		return QVariantMap();
 	}
 
 	if (reply.arguments().count() != 1) {
 		qWarning() << "Unspected reply received";
-		return adapters;
+		return QVariantMap();
 	}
 
-	if (reply.signature() != "ao") {
+	if (reply.signature() != "a{sv}") {
 		qWarning() << "Unspected reply signature";
-		return adapters;
+		return QVariantMap();
 	}
 
-	return qdbus_cast<QStringList>(reply.arguments()[0]);
+	return qdbus_cast<QVariantMap>(reply.arguments()[0]);
 }
 
 void Manager::slotAdapterRemoved(QDBusObjectPath path)

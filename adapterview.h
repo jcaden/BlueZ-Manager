@@ -33,7 +33,7 @@ private slots:
 private:
     void setAddress(QString address);
     void setVisibility(bool visible, int timeout);
-    void showDevices(QStringList devicesPaths);
+    void showDevices(QStringList devicesPaths, QString name);
     DeviceView *getDeviceView(const QString path);
 
     Ui::AdapterView *ui;

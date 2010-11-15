@@ -51,7 +51,8 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
     connect(&adapter, SIGNAL(deviceAdded(QString)), this,
 	    SLOT(deviceAdded(QString)));
 
-    showDevices(qdbus_cast<QStringList>(props.take("Devices")));
+    showDevices(qdbus_cast<QStringList>(props.take("Devices")),
+		props.take("Name").toString());
 }
 
 AdapterView::~AdapterView()
@@ -59,7 +60,7 @@ AdapterView::~AdapterView()
     delete ui;
 }
 
-void AdapterView::showDevices(QStringList devicesPaths)
+void AdapterView::showDevices(QStringList devicesPaths, QString name)
 {
 	devicesWindow = new DevicesWindow(this);
 	foreach (QString path, devicesPaths) {
@@ -68,7 +69,7 @@ void AdapterView::showDevices(QStringList devicesPaths)
 		devices.append(deviceView);
 	}
 	devicesWindow->setWindowTitle(tr("Devices for adapter ") +
-				      ui->nameEdit->text());
+				      name);
 	devicesWindow->show();
 }
 
@@ -98,17 +99,20 @@ void AdapterView::setVisibility(bool visible, int timeout)
 
 void AdapterView::propertyChanged(const QString key, const QVariant value)
 {
-	if (key == "Name")
+	if (key == "Name") {
 		ui->nameEdit->setText(value.toString());
-	else if (key == "Powered")
+		devicesWindow->setWindowTitle(tr("Devices for adapter ") +
+					      value.toString());
+	} else if (key == "Powered") {
 		ui->powered->setChecked(value.toBool());
-	else if (key == "Address")
+	} else if (key == "Address") {
 		setAddress(value.toString());
-	else if (key == "Discoverable")
+	} else if (key == "Discoverable") {
 		setVisibility(value.toBool(), ui->timeout->value());
-	else if (key == "DiscoverableTimeout")
+	} else if (key == "DiscoverableTimeout") {
 		setVisibility(ui->visibility->currentIndex() != HIDDEN,
 			      value.toInt());
+	}
 }
 
 void AdapterView::applyClicked()

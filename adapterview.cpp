@@ -45,7 +45,7 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
     connect(ui->timeout, SIGNAL(valueChanged(int)), this,
 	    SLOT(sliderChanged(int)));
 
-    showDevices(adapter.listDevices());
+    showDevices(qdbus_cast<QStringList>(props.take("Devices")));
 }
 
 AdapterView::~AdapterView()

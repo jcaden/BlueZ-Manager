@@ -38,6 +38,9 @@ public:
     ~DeviceView();
     QString devicePath();
 
+private slots:
+    void propertyChanged(QString name, QVariant value);
+
 private:
     Ui::DeviceView *ui;
     Device device;

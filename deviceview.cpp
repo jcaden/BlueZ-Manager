@@ -33,6 +33,9 @@ DeviceView::DeviceView(QString path, QWidget *parent) :
     ui->device->setTitle(props["Name"].toString());
     ui->address->setText(props["Address"].toString());
     ui->checkBox->setChecked(props["Connected"].toBool());
+
+    connect(&device, SIGNAL(propertyChanged(QString,QVariant)),
+	    this, SLOT(propertyChanged(QString, QVariant)));
 }
 
 DeviceView::~DeviceView()
@@ -43,4 +46,13 @@ DeviceView::~DeviceView()
 QString DeviceView::devicePath()
 {
 	return device.getPath();
+}
+
+void DeviceView::propertyChanged(QString name, QVariant value)
+{
+	if (name == "Connected") {
+		ui->checkBox->setChecked(value.toBool());
+	} else if (name == "Name") {
+		ui->device->setTitle(value.toString());
+	}
 }

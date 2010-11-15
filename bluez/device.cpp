@@ -43,7 +43,6 @@ Device::Device(Device &device) :
 
 Device::~Device()
 {
-	qDebug() << "Destroying device" << device.path();
 }
 
 QVariantMap Device::getProperties()

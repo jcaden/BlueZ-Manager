@@ -43,7 +43,6 @@ Adapter::Adapter(Adapter &adapter) :
 
 Adapter::~Adapter()
 {
-	qDebug() << "Destroying adapter" << adapter.path();
 }
 
 QString Adapter::getPath()

@@ -30,7 +30,8 @@ DeviceView::DeviceView(QString path, QWidget *parent) :
 
     QVariantMap props = device.getProperties();
 
-    ui->device->setTitle(props["Name"].toString());
+    ui->device->setTitle(props["Alias"].toString());
+    ui->realName->setText(props["Name"].toString());
     ui->address->setText(props["Address"].toString());
     ui->checkBox->setChecked(props["Connected"].toBool());
     ui->checkBox->setEnabled(props["Connected"].toBool());
@@ -57,8 +58,10 @@ void DeviceView::propertyChanged(QString name, QVariant value)
 	if (name == "Connected") {
 		ui->checkBox->setChecked(value.toBool());
 		ui->checkBox->setEnabled(value.toBool());
-	} else if (name == "Name") {
+	} else if (name == "Alias") {
 		ui->device->setTitle(value.toString());
+	} else if (name == "Name") {
+		ui->realName->setText(value.toString());
 	}
 }
 

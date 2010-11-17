@@ -40,6 +40,7 @@ public:
 
 private slots:
     void propertyChanged(QString name, QVariant value);
+    void checkBoxClicked();
 
 private:
     Ui::DeviceView *ui;

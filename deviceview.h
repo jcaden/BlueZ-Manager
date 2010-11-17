@@ -45,6 +45,8 @@ private slots:
 private:
     Ui::DeviceView *ui;
     Device device;
+
+    void setConnection(bool connected);
 };
 
 #endif // DEVICEVIEW_H

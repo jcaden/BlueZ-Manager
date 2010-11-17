@@ -65,6 +65,12 @@ QVariantMap Device::getProperties()
 	return qdbus_cast<QVariantMap>(reply.arguments()[0]);
 }
 
+void Device::disconnect()
+{
+	// The reply is ignored in this case
+	device.asyncCall("Disconnect");
+}
+
 QString Device::getPath()
 {
 	return device.path();

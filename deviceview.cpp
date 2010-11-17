@@ -33,8 +33,7 @@ DeviceView::DeviceView(QString path, QWidget *parent) :
     ui->device->setTitle(props["Alias"].toString());
     ui->realName->setText(props["Name"].toString());
     ui->address->setText(props["Address"].toString());
-    ui->checkBox->setChecked(props["Connected"].toBool());
-    ui->checkBox->setEnabled(props["Connected"].toBool());
+    setConnection(props["Connected"].toBool());
 
     connect(&device, SIGNAL(propertyChanged(QString,QVariant)),
 	    this, SLOT(propertyChanged(QString, QVariant)));
@@ -48,6 +47,16 @@ DeviceView::~DeviceView()
     delete ui;
 }
 
+void DeviceView::setConnection(bool connected)
+{
+	ui->checkBox->setChecked(connected);
+	ui->checkBox->setEnabled(connected);
+	if (connected)
+		ui->checkBox->setToolTip(tr("Connected"));
+	else
+		ui->checkBox->setToolTip(tr("Disconnected"));
+}
+
 QString DeviceView::devicePath()
 {
 	return device.getPath();
@@ -56,8 +65,7 @@ QString DeviceView::devicePath()
 void DeviceView::propertyChanged(QString name, QVariant value)
 {
 	if (name == "Connected") {
-		ui->checkBox->setChecked(value.toBool());
-		ui->checkBox->setEnabled(value.toBool());
+		setConnection(value.toBool());
 	} else if (name == "Alias") {
 		ui->device->setTitle(value.toString());
 	} else if (name == "Name") {
@@ -67,16 +75,13 @@ void DeviceView::propertyChanged(QString name, QVariant value)
 
 void DeviceView::checkBoxClicked()
 {
-	Qt::CheckState state = ui->checkBox->checkState();
-	switch (state) {
-	case Qt::Unchecked:
-		qDebug() << "Unchecked";
-		break;
-	case Qt::PartiallyChecked:
-		qDebug() << "Partially";
-		break;
-	case Qt::Checked:
-		qDebug() << "Checked";
-		break;
-	}
+	if (!ui->checkBox->isEnabled())
+		return;
+
+	// Is only enabled if is already connected.
+	ui->checkBox->setCheckState(Qt::PartiallyChecked);
+	ui->checkBox->setToolTip(tr("Disconnecting"));
+	ui->checkBox->setEnabled(FALSE);
+
+	device.disconnect();
 }

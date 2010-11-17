@@ -33,7 +33,9 @@ public:
 	Device(QString path);
 	Device(Device &device);
 	~Device();
+
 	QVariantMap getProperties();
+	void disconnect();
 	QString getPath();
 
 signals:

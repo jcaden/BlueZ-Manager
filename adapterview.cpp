@@ -81,7 +81,6 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 AdapterView::~AdapterView()
 {
     delete ui;
-    delete spacer;
 }
 
 void AdapterView::createDevicesView(QStringList devicesPaths, QString name)

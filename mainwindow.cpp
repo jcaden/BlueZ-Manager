@@ -24,7 +24,7 @@
 #include <QtGui>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QWidget(parent)
+	QWidget(parent)
 {
 	setWindowTitle(tr("Bluetooth Manager"));
 
@@ -40,13 +40,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	}
 
 	spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
-						 QSizePolicy::MinimumExpanding);
+						QSizePolicy::MinimumExpanding);
 	vLayout->addItem(spacer);
 
 	connect(&manager, SIGNAL(adapterAdded(QString)), this,
-		SLOT(adapterAdded(QString)));
+						SLOT(adapterAdded(QString)));
 	connect(&manager, SIGNAL(adapterRemoved(QString)), this,
-		SLOT(adapterRemoved(QString)));
+						SLOT(adapterRemoved(QString)));
 }
 
 AdapterView *MainWindow::getAdapterView(const QString path)

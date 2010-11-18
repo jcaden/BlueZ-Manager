@@ -26,27 +26,27 @@
 #include "bluez/device.h"
 
 namespace Ui {
-    class DeviceView;
+	class DeviceView;
 }
 
 class DeviceView : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit DeviceView(QString path, QWidget *parent = 0);
-    ~DeviceView();
-    QString devicePath();
+	explicit DeviceView(QString path, QWidget *parent = 0);
+	~DeviceView();
+	QString devicePath();
 
 private slots:
-    void propertyChanged(QString name, QVariant value);
-    void checkBoxClicked();
+	void propertyChanged(QString name, QVariant value);
+	void checkBoxClicked();
 
 private:
-    Ui::DeviceView *ui;
-    Device device;
+	Ui::DeviceView *ui;
+	Device device;
 
-    void setConnection(bool connected);
+	void setConnection(bool connected);
 };
 
 #endif // DEVICEVIEW_H

@@ -22,29 +22,28 @@
 #include "ui_deviceview.h"
 
 DeviceView::DeviceView(QString path, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::DeviceView),
-    device(path)
+	QWidget(parent),
+	ui(new Ui::DeviceView),
+	device(path)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 
-    QVariantMap props = device.getProperties();
+	QVariantMap props = device.getProperties();
 
-    ui->device->setTitle(props["Alias"].toString());
-    ui->realName->setText(props["Name"].toString());
-    ui->address->setText(props["Address"].toString());
-    setConnection(props["Connected"].toBool());
+	ui->device->setTitle(props["Alias"].toString());
+	ui->realName->setText(props["Name"].toString());
+	ui->address->setText(props["Address"].toString());
+	setConnection(props["Connected"].toBool());
 
-    connect(&device, SIGNAL(propertyChanged(QString,QVariant)),
-	    this, SLOT(propertyChanged(QString, QVariant)));
+	connect(&device, SIGNAL(propertyChanged(QString,QVariant)),
+				this, SLOT(propertyChanged(QString, QVariant)));
 
-    connect(ui->checkBox, SIGNAL(clicked()), this,
-						SLOT(checkBoxClicked()));
+	connect(ui->checkBox, SIGNAL(clicked()), this, SLOT(checkBoxClicked()));
 }
 
 DeviceView::~DeviceView()
 {
-    delete ui;
+	delete ui;
 }
 
 void DeviceView::setConnection(bool connected)

@@ -22,15 +22,15 @@
 #include "ui_deviceswindow.h"
 
 DevicesWindow::DevicesWindow(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::DevicesWindow)
+	QDialog(parent),
+	ui(new Ui::DevicesWindow)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 }
 
 DevicesWindow::~DevicesWindow()
 {
-    delete ui;
+	delete ui;
 }
 
 void DevicesWindow::addWidget(QWidget *widget)

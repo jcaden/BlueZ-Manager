@@ -31,6 +31,5 @@
 			<arg type="o"/>
 		</signal>
 	</interface>
-	<node name="org"/>
 </node>
 

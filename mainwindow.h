@@ -36,11 +36,11 @@ signals:
 public slots:
 
 private slots:
-	void adapterRemoved(QString path);
-	void adapterAdded(QString path);
+	void adapterRemoved(QDBusObjectPath path);
+	void adapterAdded(QDBusObjectPath path);
 
 private:
-	Manager manager;
+	OrgBluezManagerInterface manager;
 	QList<AdapterView *> adapters;
 	QSpacerItem *spacer;
 

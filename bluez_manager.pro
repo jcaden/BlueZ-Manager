@@ -3,9 +3,10 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = 
+TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
+CONFIG += qdbus
 
 # Input
 HEADERS += \
@@ -29,3 +30,5 @@ FORMS += \
     adapterview.ui \
     deviceview.ui \
     deviceswindow.ui
+
+# qDBUS_ADAPTORS += bluez/org.bluez.manager.xml

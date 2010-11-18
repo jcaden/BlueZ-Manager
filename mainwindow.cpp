@@ -24,14 +24,22 @@
 #include <QtGui>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QWidget(parent)
+	QWidget(parent),
+	manager("org.bluez", "/", QDBusConnection::systemBus())
 {
 	setWindowTitle(tr("Bluetooth Manager"));
 
 	QVBoxLayout *vLayout = new QVBoxLayout(this);
 
-	QStringList paths = qdbus_cast<QStringList>(
-					manager.getProperties()["Adapters"]);
+	QDBusPendingReply<QVariantMap> dprops = manager.GetProperties();
+	dprops.waitForFinished();
+
+	if (!dprops.isValid()) {
+		qCritical() << "Received unvalid reply";
+		return;
+	}
+
+	QStringList paths = qdbus_cast<QStringList>(dprops.value()["Adapters"]);
 	foreach (QString path, paths) {
 		AdapterView *adapterView = new AdapterView(path, this);
 
@@ -43,10 +51,10 @@ MainWindow::MainWindow(QWidget *parent) :
 						QSizePolicy::MinimumExpanding);
 	vLayout->addItem(spacer);
 
-	connect(&manager, SIGNAL(adapterAdded(QString)), this,
-						SLOT(adapterAdded(QString)));
-	connect(&manager, SIGNAL(adapterRemoved(QString)), this,
-						SLOT(adapterRemoved(QString)));
+	connect(&manager, SIGNAL(AdapterAdded(QDBusObjectPath)), this,
+					SLOT(adapterAdded(QDBusObjectPath)));
+	connect(&manager, SIGNAL(AdapterRemoved(QDBusObjectPath)), this,
+					SLOT(adapterRemoved(QDBusObjectPath)));
 }
 
 AdapterView *MainWindow::getAdapterView(const QString path)
@@ -59,17 +67,17 @@ AdapterView *MainWindow::getAdapterView(const QString path)
 	return NULL;
 }
 
-void MainWindow::adapterRemoved(QString path)
+void MainWindow::adapterRemoved(QDBusObjectPath path)
 {
-	AdapterView *view = getAdapterView(path);
+	AdapterView *view = getAdapterView(path.path());
 	adapters.removeAll(view);
 	layout()->removeWidget(view);
 	delete view;
 }
 
-void MainWindow::adapterAdded(QString path)
+void MainWindow::adapterAdded(QDBusObjectPath path)
 {
-	AdapterView *adapterView = new AdapterView(path, this);
+	AdapterView *adapterView = new AdapterView(path.path(), this);
 
 	layout()->removeItem(spacer);
 	layout()->addWidget(adapterView);

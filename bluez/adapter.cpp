@@ -25,16 +25,16 @@
 
 Adapter::Adapter(QString path) :
 	QObject(),
-	adapter("org.bluez", path,
-		"org.bluez.Adapter", QDBusConnection::systemBus())
+	adapter("org.bluez", path, "org.bluez.Adapter",
+						QDBusConnection::systemBus())
 {
 	setSignals();
 }
 
 Adapter::Adapter(Adapter &adapter) :
-		QObject(),
-		adapter("org.bluez", adapter.adapter.path(),
-			"org.bluez.Adapter", QDBusConnection::systemBus())
+	QObject(),
+	adapter("org.bluez", adapter.adapter.path(), "org.bluez.Adapter",
+						QDBusConnection::systemBus())
 {
 	setSignals();
 }
@@ -85,15 +85,15 @@ void Adapter::setSignals()
 
 void Adapter::slotDeviceRemoved(QDBusObjectPath path)
 {
-	qDebug() << "Device removed on adapter" << adapter.path() << "with path"
-			<< path.path();
+	qDebug() << "Device removed on adapter" << adapter.path() <<
+						"with path" << path.path();
 	emit deviceRemoved(path.path());
 }
 
 void Adapter::slotDeviceAdded(QDBusObjectPath path)
 {
-	qDebug() << "Device added on adapter" << adapter.path() << "with path"
-			<< path.path();
+	qDebug() << "Device added on adapter" << adapter.path() <<
+						"with path" << path.path();
 	emit deviceAdded(path.path());
 }
 
@@ -107,6 +107,5 @@ void Adapter::slotPropertyChanged(QString key, QDBusVariant value)
 
 void Adapter::setProperty(QString key, QVariant value)
 {
-	adapter.call("SetProperty", key,
-		     qVariantFromValue(QDBusVariant(value)));
+	adapter.call("SetProperty", key, qVariantFromValue(QDBusVariant(value)));
 }

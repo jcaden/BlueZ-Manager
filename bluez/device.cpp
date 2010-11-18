@@ -25,16 +25,16 @@
 
 Device::Device(QString path) :
 	QObject(),
-	device("org.bluez", path,
-		"org.bluez.Device", QDBusConnection::systemBus())
+	device("org.bluez", path, "org.bluez.Device",
+						QDBusConnection::systemBus())
 {
 	setSignals();
 }
 
 Device::Device(Device &device) :
-		QObject(),
-		device("org.bluez", device.device.path(),
-			"org.bluez.Device", QDBusConnection::systemBus())
+	QObject(),
+	device("org.bluez", device.device.path(), "org.bluez.Device",
+						QDBusConnection::systemBus())
 {
 	setSignals();
 }

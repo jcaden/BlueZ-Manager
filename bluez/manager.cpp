@@ -26,7 +26,7 @@
 Manager::Manager() :
 	QObject(),
 	manager("org.bluez", "/", "org.bluez.Manager",
-		QDBusConnection::systemBus())
+						QDBusConnection::systemBus())
 {
 	QDBusConnection::systemBus().connect("org.bluez", "/",
 			"org.bluez.Manager", "AdapterRemoved", this,

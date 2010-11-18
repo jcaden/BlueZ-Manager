@@ -30,57 +30,47 @@ enum {
 };
 
 AdapterView::AdapterView(const QString path, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::AdapterView),
-    adapter(path)
+	QWidget(parent),
+	ui(new Ui::AdapterView),
+	adapter(path)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 
-    QVariantMap props = adapter.getProperties();
+	QVariantMap props = adapter.getProperties();
 
-    ui->nameEdit->setText(props["Name"].toString());
+	ui->nameEdit->setText(props["Name"].toString());
+	ui->powered->setChecked(props["Powered"].toBool());
+	setAddress(props["Address"].toString());
 
-    ui->powered->setChecked(props["Powered"].toBool());
+	ui->visibility->addItem(tr("Hidden"));
+	ui->visibility->addItem(tr("Always visible"));
+	ui->visibility->addItem(tr("Temporaly visible"));
 
-    setAddress(props["Address"].toString());
+	setVisibility(props["Discoverable"].toBool(),
+					props["DiscoverableTimeout"].toInt());
 
-    ui->visibility->addItem(tr("Hidden"));
-    ui->visibility->addItem(tr("Always visible"));
-    ui->visibility->addItem(tr("Temporaly visible"));
+	connect(ui->apply, SIGNAL(clicked()), this, SLOT(applyClicked()));
+	connect(ui->powered, SIGNAL(clicked()), this, SLOT(poweredClicked()));
+	connect(ui->visibility, SIGNAL(currentIndexChanged(int)), this,
+						SLOT(comboChanged(int)));
+	connect(&adapter, SIGNAL(propertyChanged(QString,QVariant)), this,
+				SLOT(propertyChanged(QString, QVariant)));
+	connect(ui->timeout, SIGNAL(valueChanged(int)), this,
+						SLOT(sliderChanged(int)));
+	connect(&adapter, SIGNAL(deviceRemoved(QString)), this,
+						SLOT(deviceRemoved(QString)));
+	connect(&adapter, SIGNAL(deviceAdded(QString)), this,
+						SLOT(deviceAdded(QString)));
+	connect(ui->showDevices, SIGNAL(clicked(bool)), this,
+						SLOT(showDevicesClicked(bool)));
 
-    setVisibility(props["Discoverable"].toBool(),
-		  props["DiscoverableTimeout"].toInt());
-
-    connect(ui->apply, SIGNAL(clicked()), this,
-	    SLOT(applyClicked()));
-
-    connect(ui->powered, SIGNAL(clicked()), this, SLOT(poweredClicked()));
-
-    connect(ui->visibility, SIGNAL(currentIndexChanged(int)), this,
-	    SLOT(comboChanged(int)));
-
-    connect(&adapter, SIGNAL(propertyChanged(QString,QVariant)),
-	    this, SLOT(propertyChanged(QString, QVariant)));
-
-    connect(ui->timeout, SIGNAL(valueChanged(int)), this,
-	    SLOT(sliderChanged(int)));
-
-    connect(&adapter, SIGNAL(deviceRemoved(QString)), this,
-	    SLOT(deviceRemoved(QString)));
-
-    connect(&adapter, SIGNAL(deviceAdded(QString)), this,
-	    SLOT(deviceAdded(QString)));
-
-    connect(ui->showDevices, SIGNAL(clicked(bool)), this,
-	    SLOT(showDevicesClicked(bool)));
-
-    createDevicesView(qdbus_cast<QStringList>(props["Devices"]),
-		props["Name"].toString());
+	createDevicesView(qdbus_cast<QStringList>(props["Devices"]),
+						props["Name"].toString());
 }
 
 AdapterView::~AdapterView()
 {
-    delete ui;
+	delete ui;
 }
 
 void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
@@ -93,10 +83,9 @@ void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
 	}
 
 	spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
-				 QSizePolicy::MinimumExpanding);
+						 QSizePolicy::MinimumExpanding);
 	devicesWindow->layout()->addItem(spacer);
-	devicesWindow->setWindowTitle(tr("Devices for adapter ") +
-				      name);
+	devicesWindow->setWindowTitle(tr("Devices for adapter ") + name);
 }
 
 void AdapterView::setVisibility(bool visible, int timeout)
@@ -128,7 +117,7 @@ void AdapterView::propertyChanged(const QString key, const QVariant value)
 	if (key == "Name") {
 		ui->nameEdit->setText(value.toString());
 		devicesWindow->setWindowTitle(tr("Devices for adapter ") +
-					      value.toString());
+							value.toString());
 	} else if (key == "Powered") {
 		ui->powered->setChecked(value.toBool());
 	} else if (key == "Address") {
@@ -137,7 +126,7 @@ void AdapterView::propertyChanged(const QString key, const QVariant value)
 		setVisibility(value.toBool(), ui->timeout->value());
 	} else if (key == "DiscoverableTimeout") {
 		setVisibility(ui->visibility->currentIndex() != HIDDEN,
-			      value.toInt());
+								value.toInt());
 	}
 }
 
@@ -152,7 +141,7 @@ void AdapterView::applyClicked()
 
 	if (ui->visibility->currentIndex() == TEMPORAL)
 		adapter.setProperty("DiscoverableTimeout",
-				    (unsigned int) ui->timeout->value());
+					(unsigned int) ui->timeout->value());
 	else
 		adapter.setProperty("DiscoverableTimeout", (unsigned int) 0);
 }
@@ -242,7 +231,7 @@ void AdapterView::showDevicesClicked(bool checked)
 		ui->showDevices->setText(tr("Hide devices"));
 		devicesWindow->show();
 		connect(devicesWindow, SIGNAL(finished(int)), ui->showDevices,
-			SLOT(click()));
+								SLOT(click()));
 	} else {
 		ui->showDevices->setText(tr("Show devices"));
 		devicesWindow->hide();

@@ -104,7 +104,7 @@ void DeviceView::connectedClicked()
 	ui->connected->setToolTip(tr("Disconnecting"));
 	ui->connected->setEnabled(FALSE);
 
-	device.disconnect();
+	device.Disconnect();
 }
 
 void DeviceView::trustedClicked()

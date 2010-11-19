@@ -142,21 +142,22 @@ void AdapterView::applyClicked()
 {
 	QString name = ui->nameEdit->text();
 
-	adapter.setProperty("Name", name);
+	adapter.SetProperty("Name", QDBusVariant(name));
 
 	bool discoverable = ui->visibility->currentIndex() != HIDDEN;
-	adapter.setProperty("Discoverable", discoverable);
+	adapter.SetProperty("Discoverable", QDBusVariant(discoverable));
 
 	if (ui->visibility->currentIndex() == TEMPORAL)
-		adapter.setProperty("DiscoverableTimeout",
-					(unsigned int) ui->timeout->value());
+		adapter.SetProperty("DiscoverableTimeout",
+			QDBusVariant((unsigned int) ui->timeout->value()));
 	else
-		adapter.setProperty("DiscoverableTimeout", (unsigned int) 0);
+		adapter.SetProperty("DiscoverableTimeout",
+						QDBusVariant((unsigned int)0));
 }
 
 void AdapterView::poweredClicked()
 {
-	adapter.setProperty("Powered", ui->powered->isChecked());
+	adapter.SetProperty("Powered", QDBusVariant(ui->powered->isChecked()));
 }
 
 void AdapterView::setAddress(QString address)

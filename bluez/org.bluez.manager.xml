@@ -16,6 +16,7 @@
 		</method>
 		<method name="ListAdapters">
 			<arg type="ao" direction="out"/>
+			<annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
 		</method>
 		<signal name="PropertyChanged">
 			<arg type="s" name="name"/>

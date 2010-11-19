@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef ADAPTER_H_1290182919
-#define ADAPTER_H_1290182919
+#ifndef ADAPTER_H_1290186361
+#define ADAPTER_H_1290186361
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -70,7 +70,7 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("GetProperties"), argumentList);
     }
 
-    inline QDBusPendingReply<QList<QDBusObjectPath> > ListDevices()
+    inline Q_DECL_DEPRECATED QDBusPendingReply<QList<QDBusObjectPath> > ListDevices()
     {
         QList<QVariant> argumentList;
         return asyncCallWithArgumentList(QLatin1String("ListDevices"), argumentList);

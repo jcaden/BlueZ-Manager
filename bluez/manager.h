@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef MANAGER_H_1290185025
-#define MANAGER_H_1290185025
+#ifndef MANAGER_H_1290186161
+#define MANAGER_H_1290186161
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -55,7 +55,7 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("GetProperties"), argumentList);
     }
 
-    inline QDBusPendingReply<QList<QDBusObjectPath> > ListAdapters()
+    inline Q_DECL_DEPRECATED QDBusPendingReply<QList<QDBusObjectPath> > ListAdapters()
     {
         QList<QVariant> argumentList;
         return asyncCallWithArgumentList(QLatin1String("ListAdapters"), argumentList);

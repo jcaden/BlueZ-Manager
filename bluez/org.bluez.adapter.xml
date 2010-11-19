@@ -17,6 +17,7 @@
 		<method name="StopDiscovery"/>
 		<method name="ListDevices">
 			<arg type="ao" direction="out"/>
+			<annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
 		</method>
 		<method name="CreateDevice">
 			<arg type="s" direction="in" name="address"/>

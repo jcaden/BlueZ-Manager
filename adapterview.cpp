@@ -32,11 +32,19 @@ enum {
 AdapterView::AdapterView(const QString path, QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::AdapterView),
-	adapter(path)
+	adapter("org.bluez", path, QDBusConnection::systemBus())
 {
 	ui->setupUi(this);
 
-	QVariantMap props = adapter.getProperties();
+	QDBusPendingReply<QVariantMap> dprops = adapter.GetProperties();
+	dprops.waitForFinished();
+
+	if (!dprops.isValid()) {
+		qCritical() << "Received unvalid reply";
+		return;
+	}
+
+	QVariantMap props = dprops.value();
 
 	ui->nameEdit->setText(props["Name"].toString());
 	ui->powered->setChecked(props["Powered"].toBool());
@@ -53,14 +61,14 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 	connect(ui->powered, SIGNAL(clicked()), this, SLOT(poweredClicked()));
 	connect(ui->visibility, SIGNAL(currentIndexChanged(int)), this,
 						SLOT(comboChanged(int)));
-	connect(&adapter, SIGNAL(propertyChanged(QString,QVariant)), this,
-				SLOT(propertyChanged(QString, QVariant)));
+	connect(&adapter, SIGNAL(PropertyChanged(QString,QDBusVariant)), this,
+				SLOT(propertyChanged(QString,QDBusVariant)));
 	connect(ui->timeout, SIGNAL(valueChanged(int)), this,
 						SLOT(sliderChanged(int)));
-	connect(&adapter, SIGNAL(deviceRemoved(QString)), this,
-						SLOT(deviceRemoved(QString)));
-	connect(&adapter, SIGNAL(deviceAdded(QString)), this,
-						SLOT(deviceAdded(QString)));
+	connect(&adapter, SIGNAL(DeviceRemoved(QDBusObjectPath)), this,
+					SLOT(deviceRemoved(QDBusObjectPath)));
+	connect(&adapter, SIGNAL(DeviceCreated(QDBusObjectPath)), this,
+					SLOT(deviceCreated(QDBusObjectPath)));
 	connect(ui->showDevices, SIGNAL(clicked(bool)), this,
 						SLOT(showDevicesClicked(bool)));
 
@@ -112,21 +120,21 @@ void AdapterView::setVisibility(bool visible, int timeout)
 	ui->timeout->setEnabled(FALSE);
 }
 
-void AdapterView::propertyChanged(const QString key, const QVariant value)
+void AdapterView::propertyChanged(const QString name, const QDBusVariant value)
 {
-	if (key == "Name") {
-		ui->nameEdit->setText(value.toString());
+	if (name == "Name") {
+		ui->nameEdit->setText(value.variant().toString());
 		devicesWindow->setWindowTitle(tr("Devices for adapter ") +
-							value.toString());
-	} else if (key == "Powered") {
-		ui->powered->setChecked(value.toBool());
-	} else if (key == "Address") {
-		setAddress(value.toString());
-	} else if (key == "Discoverable") {
-		setVisibility(value.toBool(), ui->timeout->value());
-	} else if (key == "DiscoverableTimeout") {
+						value.variant().toString());
+	} else if (name == "Powered") {
+		ui->powered->setChecked(value.variant().toBool());
+	} else if (name == "Address") {
+		setAddress(value.variant().toString());
+	} else if (name == "Discoverable") {
+		setVisibility(value.variant().toBool(), ui->timeout->value());
+	} else if (name == "DiscoverableTimeout") {
 		setVisibility(ui->visibility->currentIndex() != HIDDEN,
-								value.toInt());
+						value.variant().toInt());
 	}
 }
 
@@ -193,7 +201,7 @@ void AdapterView::comboChanged(int value)
 
 QString AdapterView::adapterPath()
 {
-	return adapter.getPath();
+	return adapter.path();
 }
 
 DeviceView *AdapterView::getDeviceView(const QString path)
@@ -206,18 +214,18 @@ DeviceView *AdapterView::getDeviceView(const QString path)
 	return NULL;
 }
 
-void AdapterView::deviceRemoved(QString path)
+void AdapterView::deviceRemoved(const QDBusObjectPath &device)
 {
-	DeviceView *view = getDeviceView(path);
+	DeviceView *view = getDeviceView(device.path());
 	devices.removeAll(view);
 
 	devicesWindow->layout()->removeWidget(view);
 	delete view;
 }
 
-void AdapterView::deviceAdded(QString path)
+void AdapterView::deviceCreated(const QDBusObjectPath &device)
 {
-	DeviceView *deviceView = new DeviceView(path, this);
+	DeviceView *deviceView = new DeviceView(device.path(), this);
 
 	devicesWindow->layout()->removeItem(spacer);
 	devicesWindow->layout()->addWidget(deviceView);

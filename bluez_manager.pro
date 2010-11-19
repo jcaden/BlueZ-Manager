@@ -31,4 +31,5 @@ FORMS += \
     deviceview.ui \
     deviceswindow.ui
 
-# qDBUS_ADAPTORS += bluez/org.bluez.manager.xml
+# qDBUS_ADAPTORS += bluez/org.bluez.manager.xml \
+#    bluez/orb.bluez.adapter.xml

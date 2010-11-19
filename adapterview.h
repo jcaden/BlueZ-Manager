@@ -44,11 +44,11 @@ public:
 private slots:
 	void applyClicked();
 	void poweredClicked();
-	void propertyChanged(const QString key, const QVariant value);
+	void propertyChanged(const QString name, const QDBusVariant value);
 	void sliderChanged(int value);
 	void comboChanged(int value);
-	void deviceRemoved(QString path);
-	void deviceAdded(QString path);
+	void deviceRemoved(const QDBusObjectPath &device);
+	void deviceCreated(const QDBusObjectPath &device);
 	void showDevicesClicked(bool checked);
 
 private:
@@ -58,7 +58,7 @@ private:
 	DeviceView *getDeviceView(const QString path);
 
 	Ui::AdapterView *ui;
-	Adapter adapter;
+	OrgBluezAdapterInterface adapter;
 	QList<DeviceView *> devices;
 	DevicesWindow *devicesWindow;
 	QSpacerItem *spacer;

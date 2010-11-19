@@ -11,24 +11,24 @@
 			<arg type="o" direction="out"/>
 		</method>
 		<method name="FindAdapter">
-			<arg type="s" direction="in"/>
+			<arg type="s" direction="in" name="pattern"/>
 			<arg type="o" direction="out"/>
 		</method>
 		<method name="ListAdapters">
 			<arg type="ao" direction="out"/>
 		</method>
 		<signal name="PropertyChanged">
-			<arg type="s"/>
-			<arg type="v"/>
+			<arg type="s" name="name"/>
+			<arg type="v" name="value"/>
 		</signal>
 		<signal name="AdapterAdded">
-			<arg type="o"/>
+			<arg type="o" name="adapter"/>
 		</signal>
 		<signal name="AdapterRemoved">
-			<arg type="o"/>
+			<arg type="o" name="adapter"/>
 		</signal>
 		<signal name="DefaultAdapterChanged">
-			<arg type="o"/>
+			<arg type="o" name="adapter"/>
 		</signal>
 	</interface>
 </node>

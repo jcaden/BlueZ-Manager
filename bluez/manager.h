@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef MANAGER_H_1290120410
-#define MANAGER_H_1290120410
+#ifndef MANAGER_H_1290185025
+#define MANAGER_H_1290185025
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -42,10 +42,10 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("DefaultAdapter"), argumentList);
     }
 
-    inline QDBusPendingReply<QDBusObjectPath> FindAdapter(const QString &in0)
+    inline QDBusPendingReply<QDBusObjectPath> FindAdapter(const QString &pattern)
     {
         QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(in0);
+        argumentList << qVariantFromValue(pattern);
         return asyncCallWithArgumentList(QLatin1String("FindAdapter"), argumentList);
     }
 
@@ -62,10 +62,10 @@ public Q_SLOTS: // METHODS
     }
 
 Q_SIGNALS: // SIGNALS
-    void AdapterAdded(const QDBusObjectPath &in0);
-    void AdapterRemoved(const QDBusObjectPath &in0);
-    void DefaultAdapterChanged(const QDBusObjectPath &in0);
-    void PropertyChanged(const QString &in0, const QDBusVariant &in1);
+    void AdapterAdded(const QDBusObjectPath &adapter);
+    void AdapterRemoved(const QDBusObjectPath &adapter);
+    void DefaultAdapterChanged(const QDBusObjectPath &adapter);
+    void PropertyChanged(const QString &name, const QDBusVariant &value);
 };
 
 namespace org {

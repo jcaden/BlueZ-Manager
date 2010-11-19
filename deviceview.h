@@ -40,13 +40,15 @@ public:
 
 private slots:
 	void propertyChanged(const QString &name, const QDBusVariant &value);
-	void checkBoxClicked();
+	void connectedClicked();
+	void trustedClicked();
 
 private:
 	Ui::DeviceView *ui;
 	OrgBluezDeviceInterface device;
 
 	void setConnection(bool connected);
+	void setTrusted(bool trusted);
 };
 
 #endif // DEVICEVIEW_H

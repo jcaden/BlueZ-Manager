@@ -56,8 +56,8 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QCheckBox" name="checkBox">
+      <item row="1" column="4">
+       <widget class="QCheckBox" name="connected">
         <property name="font">
          <font>
           <pointsize>11</pointsize>
@@ -76,7 +76,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0" colspan="4">
+      <item row="0" column="0" colspan="5">
        <widget class="QLabel" name="realName">
         <property name="minimumSize">
          <size>
@@ -111,6 +111,16 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="trusted">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="tristate">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

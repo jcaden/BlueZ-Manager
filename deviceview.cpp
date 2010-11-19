@@ -42,11 +42,14 @@ DeviceView::DeviceView(QString path, QWidget *parent) :
 	ui->realName->setText(props["Name"].toString());
 	ui->address->setText(props["Address"].toString());
 	setConnection(props["Connected"].toBool());
+	setTrusted(props["Trusted"].toBool());
 
 	connect(&device, SIGNAL(PropertyChanged(QString,QDBusVariant)), this,
 				SLOT(propertyChanged(QString, QDBusVariant)));
 
-	connect(ui->checkBox, SIGNAL(clicked()), this, SLOT(checkBoxClicked()));
+	connect(ui->connected, SIGNAL(clicked()), this,
+						SLOT(connectedClicked()));
+	connect(ui->trusted, SIGNAL(clicked()), this, SLOT(trustedClicked()));
 }
 
 DeviceView::~DeviceView()
@@ -56,12 +59,21 @@ DeviceView::~DeviceView()
 
 void DeviceView::setConnection(bool connected)
 {
-	ui->checkBox->setChecked(connected);
-	ui->checkBox->setEnabled(connected);
+	ui->connected->setChecked(connected);
+	ui->connected->setEnabled(connected);
 	if (connected)
-		ui->checkBox->setToolTip(tr("Connected"));
+		ui->connected->setToolTip(tr("Connected"));
 	else
-		ui->checkBox->setToolTip(tr("Disconnected"));
+		ui->connected->setToolTip(tr("Disconnected"));
+}
+
+void DeviceView::setTrusted(bool trusted)
+{
+	ui->trusted->setChecked(trusted);
+	if (trusted)
+		ui->trusted->setToolTip(tr("Trusted device"));
+	else
+		ui->trusted->setToolTip(tr("Untrusted device"));
 }
 
 QString DeviceView::devicePath()
@@ -77,18 +89,32 @@ void DeviceView::propertyChanged(const QString &name, const QDBusVariant &value)
 		ui->device->setTitle(value.variant().toString());
 	} else if (name == "Name") {
 		ui->realName->setText(value.variant().toString());
+	} else if (name == "Trusted") {
+		setTrusted(value.variant().toBool());
 	}
 }
 
-void DeviceView::checkBoxClicked()
+void DeviceView::connectedClicked()
 {
-	if (!ui->checkBox->isEnabled())
+	if (!ui->connected->isEnabled())
 		return;
 
 	// Is only enabled if is already connected.
-	ui->checkBox->setCheckState(Qt::PartiallyChecked);
-	ui->checkBox->setToolTip(tr("Disconnecting"));
-	ui->checkBox->setEnabled(FALSE);
+	ui->connected->setCheckState(Qt::PartiallyChecked);
+	ui->connected->setToolTip(tr("Disconnecting"));
+	ui->connected->setEnabled(FALSE);
 
 	device.disconnect();
+}
+
+void DeviceView::trustedClicked()
+{
+	QDBusPendingReply<> reply = device.SetProperty("Trusted",
+					QDBusVariant(ui->trusted->isChecked()));
+	reply.waitForFinished();
+
+	if (reply.isError()) {
+		ui->trusted->setChecked(!ui->trusted->isChecked());
+		qWarning() << "Error setting property";
+	}
 }

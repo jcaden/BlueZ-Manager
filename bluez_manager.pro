@@ -13,6 +13,7 @@ HEADERS += \
     bluez/manager.h \
     bluez/adapter.h \
     bluez/device.h \
+    bluez/types.h \
     adapterview.h \
     mainwindow.h \
     deviceview.h \

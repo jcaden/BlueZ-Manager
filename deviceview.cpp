@@ -24,19 +24,27 @@
 DeviceView::DeviceView(QString path, QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::DeviceView),
-	device(path)
+	device("org.bluez", path, QDBusConnection::systemBus())
 {
 	ui->setupUi(this);
 
-	QVariantMap props = device.getProperties();
+	QDBusPendingReply<QVariantMap> dprops = device.GetProperties();
+	dprops.waitForFinished();
+
+	if (!dprops.isValid()) {
+		qCritical() << "Received unvalid reply";
+		return;
+	}
+
+	QVariantMap props = dprops.value();
 
 	ui->device->setTitle(props["Alias"].toString());
 	ui->realName->setText(props["Name"].toString());
 	ui->address->setText(props["Address"].toString());
 	setConnection(props["Connected"].toBool());
 
-	connect(&device, SIGNAL(propertyChanged(QString,QVariant)),
-				this, SLOT(propertyChanged(QString, QVariant)));
+	connect(&device, SIGNAL(PropertyChanged(QString,QDBusVariant)), this,
+				SLOT(propertyChanged(QString, QDBusVariant)));
 
 	connect(ui->checkBox, SIGNAL(clicked()), this, SLOT(checkBoxClicked()));
 }
@@ -58,17 +66,17 @@ void DeviceView::setConnection(bool connected)
 
 QString DeviceView::devicePath()
 {
-	return device.getPath();
+	return device.path();
 }
 
-void DeviceView::propertyChanged(QString name, QVariant value)
+void DeviceView::propertyChanged(const QString &name, const QDBusVariant &value)
 {
 	if (name == "Connected") {
-		setConnection(value.toBool());
+		setConnection(value.variant().toBool());
 	} else if (name == "Alias") {
-		ui->device->setTitle(value.toString());
+		ui->device->setTitle(value.variant().toString());
 	} else if (name == "Name") {
-		ui->realName->setText(value.toString());
+		ui->realName->setText(value.variant().toString());
 	}
 }
 

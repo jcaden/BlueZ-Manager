@@ -18,35 +18,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef DEVICEVIEW_H
-#define DEVICEVIEW_H
+#ifndef BLUEZ_TYPES_H
+#define BLUEZ_TYPES_H
 
-#include <QWidget>
+#include <QtCore>
 
-#include "bluez/device.h"
+typedef QMap<uint, QString> ServiceMap;
+Q_DECLARE_METATYPE(ServiceMap);
 
-namespace Ui {
-	class DeviceView;
-}
-
-class DeviceView : public QWidget
-{
-	Q_OBJECT
-
-public:
-	explicit DeviceView(QString path, QWidget *parent = 0);
-	~DeviceView();
-	QString devicePath();
-
-private slots:
-	void propertyChanged(const QString &name, const QDBusVariant &value);
-	void checkBoxClicked();
-
-private:
-	Ui::DeviceView *ui;
-	OrgBluezDeviceInterface device;
-
-	void setConnection(bool connected);
-};
-
-#endif // DEVICEVIEW_H
+#endif // BLUEZ_TYPES_H

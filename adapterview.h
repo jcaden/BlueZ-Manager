@@ -58,6 +58,7 @@ private:
 	DeviceView *getDeviceView(const QString path);
 
 	Ui::AdapterView *ui;
+	int timeout;
 	OrgBluezAdapterInterface adapter;
 	QList<DeviceView *> devices;
 	DevicesWindow *devicesWindow;

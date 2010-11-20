@@ -98,6 +98,7 @@ void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
 
 void AdapterView::setVisibility(bool visible, int timeout)
 {
+	this->timeout = timeout;
 	ui->timeout->setValue(timeout);
 	sliderChanged(timeout);
 
@@ -131,7 +132,7 @@ void AdapterView::propertyChanged(const QString name, const QDBusVariant value)
 	} else if (name == "Address") {
 		setAddress(value.variant().toString());
 	} else if (name == "Discoverable") {
-		setVisibility(value.variant().toBool(), ui->timeout->value());
+		setVisibility(value.variant().toBool(), timeout);
 	} else if (name == "DiscoverableTimeout") {
 		setVisibility(ui->visibility->currentIndex() != HIDDEN,
 						value.variant().toInt());

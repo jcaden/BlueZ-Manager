@@ -22,6 +22,7 @@
 #include "ui_adapterview.h"
 
 #include "bluez/adapter.h"
+#include "bluez/agent.h"
 
 enum {
 	HIDDEN = 0,
@@ -74,6 +75,16 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 
 	createDevicesView(qdbus_cast<QStringList>(props["Devices"]),
 						props["Name"].toString());
+
+	QString adapterPath = AGENT_BASE;
+	adapterPath.append(path.split("/").last());
+
+	new AgentAdaptor(this);
+	QDBusConnection::systemBus().registerObject(adapterPath, this);
+
+	// Do not check the response, if fails is assumed that other agent
+	// is already registered an no option of register a new one.
+	adapter.RegisterAgent(QDBusObjectPath(adapterPath), "DisplayYesNo");
 }
 
 AdapterView::~AdapterView()
@@ -246,4 +257,59 @@ void AdapterView::showDevicesClicked(bool checked)
 		ui->showDevices->setText(tr("Show devices"));
 		devicesWindow->hide();
 	}
+}
+
+/* D-Bus Agent slots */
+void AdapterView::Authorize(const QDBusObjectPath &device, const QString &uuid)
+{
+	/* TODO: Implement this method */
+	qDebug() << "Authorize received. Device: " << device.path() <<
+							" Uuid: " << uuid;
+}
+
+void AdapterView::Cancel()
+{
+	/* TODO: Implement this method */
+	qDebug() << "Cancel received";
+}
+
+void AdapterView::ConfirmModeChange(const QString &mode)
+{
+	/* TODO: Implement this method */
+	qDebug() << "ConfirmModeChange received. Mode " << mode;
+}
+
+void AdapterView::DisplayPasskey(const QDBusObjectPath &device, uint passkey)
+{
+	/* TODO: Implement this method */
+	qDebug() << "DisplayPasskey received. Device: " << device.path() <<
+				" Passkey: " << QString::number(passkey);
+}
+
+void AdapterView::Release()
+{
+	/* TODO: Implement this method */
+	qDebug() << "Release received";
+}
+
+void AdapterView::RequestConfirmation(const QDBusObjectPath &device,
+								uint passkey)
+{
+	/* TODO: Implement this method */
+	qDebug() << "RequestConfirmation received. Device: " << device.path() <<
+				" Passkey: " << QString::number(passkey);
+}
+
+uint AdapterView::RequestPasskey(const QDBusObjectPath &device)
+{
+	/* TODO: Implement this method */
+	qDebug() << "RequestPasskey received. Device " << device.path();
+	return 0;
+}
+
+QString AdapterView::RequestPinCode(const QDBusObjectPath &device)
+{
+	/* TODO: Implement this method */
+	qDebug() << "RequestPinCode received. Device: " << device.path();
+	return "0000";
 }

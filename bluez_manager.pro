@@ -13,6 +13,7 @@ HEADERS += \
     bluez/manager.h \
     bluez/adapter.h \
     bluez/device.h \
+    bluez/agent.h \
     bluez/types.h \
     adapterview.h \
     mainwindow.h \
@@ -22,6 +23,7 @@ SOURCES += main.cpp \
     bluez/manager.cpp \
     bluez/adapter.cpp \
     bluez/device.cpp \
+    bluez/agent.cpp \
     adapterview.cpp \
     mainwindow.cpp \
     deviceview.cpp \
@@ -33,4 +35,5 @@ FORMS += \
     deviceswindow.ui
 
 # qDBUS_ADAPTORS += bluez/org.bluez.manager.xml \
-#    bluez/orb.bluez.adapter.xml
+#    bluez/org.bluez.adapter.xml \
+#    bluez/agent.xml

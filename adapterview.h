@@ -41,6 +41,17 @@ public:
 
 	QString adapterPath();
 
+public slots:
+	/* D-Bus Agent slots */
+	void Authorize(const QDBusObjectPath &device, const QString &uuid);
+	void Cancel();
+	void ConfirmModeChange(const QString &mode);
+	void DisplayPasskey(const QDBusObjectPath &device, uint passkey);
+	void Release();
+	void RequestConfirmation(const QDBusObjectPath &device, uint passkey);
+	uint RequestPasskey(const QDBusObjectPath &device);
+	QString RequestPinCode(const QDBusObjectPath &device);
+
 private slots:
 	void applyClicked();
 	void poweredClicked();
@@ -63,6 +74,7 @@ private:
 	QList<DeviceView *> devices;
 	DevicesWindow *devicesWindow;
 	QSpacerItem *spacer;
+
 };
 
 #endif // ADAPTERVIEW_H

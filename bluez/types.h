@@ -26,4 +26,6 @@
 typedef QMap<uint, QString> ServiceMap;
 Q_DECLARE_METATYPE(ServiceMap);
 
+const char AGENT_BASE[] = "/agent/";
+
 #endif // BLUEZ_TYPES_H

@@ -95,6 +95,9 @@ void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
 		DeviceView *deviceView = new DeviceView(path, this);
 		devicesWindow->layout()->addWidget(deviceView);
 		devices.append(deviceView);
+
+		connect(deviceView, SIGNAL(deletePairing(QString)), this,
+						SLOT(deleteDevice(QString)));
 	}
 
 	spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
@@ -240,6 +243,9 @@ void AdapterView::deviceCreated(const QDBusObjectPath &device)
 	devicesWindow->layout()->addWidget(deviceView);
 	devicesWindow->layout()->addItem(spacer);
 	devices.append(deviceView);
+
+	connect(deviceView, SIGNAL(deletePairing(QString)), this,
+						SLOT(deleteDevice(QString)));
 }
 
 void AdapterView::showDevicesClicked(bool checked)
@@ -253,6 +259,11 @@ void AdapterView::showDevicesClicked(bool checked)
 		ui->showDevices->setText(tr("Show devices"));
 		devicesWindow->hide();
 	}
+}
+
+void AdapterView::deleteDevice(const QString &path)
+{
+	adapter.RemoveDevice(QDBusObjectPath(path));
 }
 
 /* D-Bus Agent slots */

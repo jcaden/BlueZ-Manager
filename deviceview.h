@@ -38,10 +38,15 @@ public:
 	~DeviceView();
 	QString devicePath();
 
+signals:
+	void deletePairing(const QString &device);
+
 private slots:
 	void propertyChanged(const QString &name, const QDBusVariant &value);
 	void connectedClicked();
 	void trustedClicked();
+	void contextMenu(const QPoint &);
+	void deletePairing();
 
 private:
 	Ui::DeviceView *ui;

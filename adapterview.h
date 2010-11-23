@@ -62,6 +62,8 @@ private slots:
 	void deviceCreated(const QDBusObjectPath &device);
 	void showDevicesClicked(bool checked);
 
+	void deleteDevice(const QString &path);
+
 private:
 	void setAddress(QString address);
 	void setVisibility(bool visible, int timeout);

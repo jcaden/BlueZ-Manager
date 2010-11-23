@@ -29,6 +29,9 @@
        <bold>true</bold>
       </font>
      </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
      <property name="title">
       <string>Device Name</string>
      </property>

@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <QMenu>
+
 #include "deviceview.h"
 #include "ui_deviceview.h"
 
@@ -50,6 +52,9 @@ DeviceView::DeviceView(QString path, QWidget *parent) :
 	connect(ui->connected, SIGNAL(clicked()), this,
 						SLOT(connectedClicked()));
 	connect(ui->trusted, SIGNAL(clicked()), this, SLOT(trustedClicked()));
+
+	connect(ui->device, SIGNAL(customContextMenuRequested(const QPoint &)),
+				this, SLOT(contextMenu(const QPoint &)));
 }
 
 DeviceView::~DeviceView()
@@ -117,4 +122,17 @@ void DeviceView::trustedClicked()
 		ui->trusted->setChecked(!ui->trusted->isChecked());
 		qWarning() << "Error setting property";
 	}
+}
+
+/* Context menu */
+void DeviceView::contextMenu(const QPoint &pos)
+{
+	QMenu *menu = new QMenu();
+	menu->addAction(tr("Delete pairing"), this, SLOT(deletePairing()));
+	menu->exec(ui->device->mapToGlobal(pos));
+}
+
+void DeviceView::deletePairing()
+{
+	emit deletePairing(device.path());
 }

@@ -51,10 +51,6 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 	ui->powered->setChecked(props["Powered"].toBool());
 	setAddress(props["Address"].toString());
 
-	ui->visibility->addItem(tr("Hidden"));
-	ui->visibility->addItem(tr("Always visible"));
-	ui->visibility->addItem(tr("Temporaly visible"));
-
 	setVisibility(props["Discoverable"].toBool(),
 					props["DiscoverableTimeout"].toInt());
 

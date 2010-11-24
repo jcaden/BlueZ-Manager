@@ -26,7 +26,8 @@
 DeviceView::DeviceView(QString path, QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::DeviceView),
-	device("org.bluez", path, QDBusConnection::systemBus())
+	device("org.bluez", path, QDBusConnection::systemBus()),
+	properties()
 {
 	ui->setupUi(this);
 
@@ -38,13 +39,13 @@ DeviceView::DeviceView(QString path, QWidget *parent) :
 		return;
 	}
 
-	QVariantMap props = dprops.value();
+	properties = dprops.value();
 
-	ui->device->setTitle(props["Alias"].toString());
-	ui->realName->setText(props["Name"].toString());
-	ui->address->setText(props["Address"].toString());
-	setConnection(props["Connected"].toBool());
-	setTrusted(props["Trusted"].toBool());
+	ui->device->setTitle(properties["Alias"].toString());
+	ui->realName->setText(properties["Name"].toString());
+	ui->address->setText(properties["Address"].toString());
+	setConnection(properties["Connected"].toBool());
+	setTrusted(properties["Trusted"].toBool());
 
 	connect(&device, SIGNAL(PropertyChanged(QString,QDBusVariant)), this,
 				SLOT(propertyChanged(QString, QDBusVariant)));
@@ -97,6 +98,8 @@ void DeviceView::propertyChanged(const QString &name, const QDBusVariant &value)
 	} else if (name == "Trusted") {
 		setTrusted(value.variant().toBool());
 	}
+
+	properties[name] = value.variant();
 }
 
 void DeviceView::connectedClicked()

@@ -51,6 +51,7 @@ private slots:
 private:
 	Ui::DeviceView *ui;
 	OrgBluezDeviceInterface device;
+	QVariantMap properties;
 
 	void setConnection(bool connected);
 	void setTrusted(bool trusted);

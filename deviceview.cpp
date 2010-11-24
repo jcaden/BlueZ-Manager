@@ -22,6 +22,7 @@
 
 #include "deviceview.h"
 #include "ui_deviceview.h"
+#include "changenamedialog.h"
 
 DeviceView::DeviceView(QString path, QWidget *parent) :
 	QWidget(parent),
@@ -127,15 +128,31 @@ void DeviceView::trustedClicked()
 	}
 }
 
+void DeviceView::newNameSet(const QString &name)
+{
+	device.SetProperty("Alias", QDBusVariant(name));
+}
+
 /* Context menu */
 void DeviceView::contextMenu(const QPoint &pos)
 {
 	QMenu *menu = new QMenu();
 	menu->addAction(tr("Delete pairing"), this, SLOT(deletePairing()));
+	menu->addAction(tr("Change name"), this, SLOT(changeName()));
 	menu->exec(ui->device->mapToGlobal(pos));
 }
 
 void DeviceView::deletePairing()
 {
 	emit deletePairing(device.path());
+}
+
+void DeviceView::changeName()
+{
+	ChangeNameDialog *cnd = new ChangeNameDialog(
+					properties["Alias"].toString(), this);
+
+	connect(cnd, SIGNAL(newNameSet(QString)), this,
+						SLOT(newNameSet(QString)));
+	cnd->show();
 }

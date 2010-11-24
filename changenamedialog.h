@@ -18,47 +18,31 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef DEVICEVIEW_H
-#define DEVICEVIEW_H
+#ifndef CHANGENAMEDIALOG_H
+#define CHANGENAMEDIALOG_H
 
-#include <QWidget>
-
-#include "bluez/device.h"
+#include <QDialog>
 
 namespace Ui {
-	class DeviceView;
+	class ChangeNameDialog;
 }
 
-class DeviceView : public QWidget
+class ChangeNameDialog : public QDialog
 {
 	Q_OBJECT
 
 public:
-	explicit DeviceView(QString path, QWidget *parent = 0);
-	~DeviceView();
-	QString devicePath();
+	explicit ChangeNameDialog(const QString &name, QWidget *parent = 0);
+	~ChangeNameDialog();
 
 signals:
-	void deletePairing(const QString &device);
-
-private slots:
-	void propertyChanged(const QString &name, const QDBusVariant &value);
-	void connectedClicked();
-	void trustedClicked();
-	void contextMenu(const QPoint &);
 	void newNameSet(const QString &name);
 
-	/* Context menu slots */
-	void deletePairing();
-	void changeName();
+private slots:
+	void accepted();
 
 private:
-	Ui::DeviceView *ui;
-	OrgBluezDeviceInterface device;
-	QVariantMap properties;
-
-	void setConnection(bool connected);
-	void setTrusted(bool trusted);
+	Ui::ChangeNameDialog *ui;
 };
 
-#endif // DEVICEVIEW_H
+#endif // CHANGENAMEDIALOG_H

@@ -18,47 +18,29 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef DEVICEVIEW_H
-#define DEVICEVIEW_H
+#include "changenamedialog.h"
+#include "ui_changenamedialog.h"
 
-#include <QWidget>
+ChangeNameDialog::ChangeNameDialog(const QString &name, QWidget *parent) :
+	QDialog(parent),
+	ui(new Ui::ChangeNameDialog)
+{
+	ui->setupUi(this);
 
-#include "bluez/device.h"
-
-namespace Ui {
-	class DeviceView;
+	setWindowTitle(tr("New name for device") + " " + name);
+	ui->name->setText(name);
+	connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
 }
 
-class DeviceView : public QWidget
+ChangeNameDialog::~ChangeNameDialog()
 {
-	Q_OBJECT
+	delete ui;
+}
 
-public:
-	explicit DeviceView(QString path, QWidget *parent = 0);
-	~DeviceView();
-	QString devicePath();
+void ChangeNameDialog::accepted()
+{
+	QString name = ui->name->text();
 
-signals:
-	void deletePairing(const QString &device);
-
-private slots:
-	void propertyChanged(const QString &name, const QDBusVariant &value);
-	void connectedClicked();
-	void trustedClicked();
-	void contextMenu(const QPoint &);
-	void newNameSet(const QString &name);
-
-	/* Context menu slots */
-	void deletePairing();
-	void changeName();
-
-private:
-	Ui::DeviceView *ui;
-	OrgBluezDeviceInterface device;
-	QVariantMap properties;
-
-	void setConnection(bool connected);
-	void setTrusted(bool trusted);
-};
-
-#endif // DEVICEVIEW_H
+	if (!name.isEmpty())
+		emit newNameSet(name);
+}

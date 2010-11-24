@@ -91,18 +91,9 @@ AdapterView::~AdapterView()
 void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
 {
 	devicesWindow = new DevicesWindow(this);
-	foreach (QString path, devicesPaths) {
-		DeviceView *deviceView = new DeviceView(path, this);
-		devicesWindow->layout()->addWidget(deviceView);
-		devices.append(deviceView);
+	foreach (QString path, devicesPaths)
+		this->deviceCreated(QDBusObjectPath(path));
 
-		connect(deviceView, SIGNAL(deletePairing(QString)), this,
-						SLOT(deleteDevice(QString)));
-	}
-
-	spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
-						 QSizePolicy::MinimumExpanding);
-	devicesWindow->layout()->addItem(spacer);
 	devicesWindow->setWindowTitle(tr("Devices for adapter ") + name);
 }
 
@@ -231,7 +222,7 @@ void AdapterView::deviceRemoved(const QDBusObjectPath &device)
 	DeviceView *view = getDeviceView(device.path());
 	devices.removeAll(view);
 
-	devicesWindow->layout()->removeWidget(view);
+	devicesWindow->removeWidget(view);
 	delete view;
 }
 
@@ -239,9 +230,7 @@ void AdapterView::deviceCreated(const QDBusObjectPath &device)
 {
 	DeviceView *deviceView = new DeviceView(device.path(), this);
 
-	devicesWindow->layout()->removeItem(spacer);
-	devicesWindow->layout()->addWidget(deviceView);
-	devicesWindow->layout()->addItem(spacer);
+	devicesWindow->addWidget(deviceView);
 	devices.append(deviceView);
 
 	connect(deviceView, SIGNAL(deletePairing(QString)), this,

@@ -35,6 +35,7 @@ public:
 	explicit DevicesWindow(QWidget *parent = 0);
 	~DevicesWindow();
 	void addWidget(QWidget *widget);
+	void removeWidget(QWidget *widget);
 
 private:
 	Ui::DevicesWindow *ui;

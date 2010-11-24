@@ -35,5 +35,10 @@ DevicesWindow::~DevicesWindow()
 
 void DevicesWindow::addWidget(QWidget *widget)
 {
-	ui->gridLayout->addWidget(widget);
+	ui->devices->addWidget(widget);
+}
+
+void DevicesWindow::removeWidget(QWidget *widget)
+{
+	ui->devices->removeWidget(widget);
 }

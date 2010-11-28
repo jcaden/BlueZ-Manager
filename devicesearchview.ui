@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
+   <item row="1" column="0" colspan="2">
     <widget class="QTreeWidget" name="treeWidget">
      <column>
       <property name="text">
@@ -30,6 +30,13 @@
    </item>
    <item row="2" column="0">
     <widget class="QProgressBar" name="progressBar"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="searchAgain">
+     <property name="text">
+      <string>Search Again</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

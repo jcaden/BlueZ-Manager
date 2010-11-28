@@ -21,6 +21,8 @@
 #include "devicesearchview.h"
 #include "ui_devicesearchview.h"
 
+#include "adapterview.h"
+
 DeviceSearchView::DeviceSearchView(QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::DeviceSearchView)
@@ -29,6 +31,8 @@ DeviceSearchView::DeviceSearchView(QWidget *parent) :
 
 	ui->progressBar->setMaximum(1);
 	ui->progressBar->setValue(1);
+
+	connect(ui->searchAgain, SIGNAL(clicked()), this, SLOT(searchAgain()));
 }
 
 DeviceSearchView::~DeviceSearchView()
@@ -77,4 +81,12 @@ void DeviceSearchView::propertyChanged(const QString name,
 			ui->progressBar->setFormat("Search done");
 		}
 	}
+}
+
+void DeviceSearchView::searchAgain()
+{
+	if (!parent()->parent()->inherits("AdapterView"))
+		return;
+	AdapterView *adapter = (AdapterView *)parent()->parent();
+	adapter->getAdapter()->StartDiscovery();
 }

@@ -43,6 +43,9 @@ public slots:
 	void DeviceFound(const QString &address, const QVariantMap &values);
 	void propertyChanged(const QString name, const QDBusVariant value);
 
+private slots:
+	void searchAgain();
+
 private:
 	Ui::DeviceSearchView *ui;
 };

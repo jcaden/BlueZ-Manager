@@ -18,8 +18,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <QDebug>
-
 #include "devicesearchview.h"
 #include "ui_devicesearchview.h"
 
@@ -40,8 +38,6 @@ DeviceSearchView::~DeviceSearchView()
 
 void DeviceSearchView::DeviceDisappeared(const QString &address)
 {
-	qDebug() << "Device disappeared " << address;
-
 	for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++) {
 		QTreeWidgetItem *widget = ui->treeWidget->topLevelItem(i);
 		if (widget->text(1) == address) {

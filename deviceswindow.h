@@ -22,8 +22,9 @@
 #define DEVICESWINDOW_H
 
 #include <QDialog>
-
 #include <QVariantMap>
+
+#include "devicesearchview.h"
 
 namespace Ui {
 	class DevicesWindow;
@@ -44,6 +45,7 @@ private slots:
 
 private:
 	Ui::DevicesWindow *ui;
+	DeviceSearchView *search;
 };
 
 #endif // DEVICESWINDOW_H

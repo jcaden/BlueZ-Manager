@@ -22,15 +22,27 @@
 #include "ui_deviceswindow.h"
 
 #include "adapterview.h"
-#include "devicesearchview.h"
 
 DevicesWindow::DevicesWindow(QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::DevicesWindow)
 {
 	ui->setupUi(this);
+	search= new DeviceSearchView(this);
 
 	connect(ui->addDevice, SIGNAL(clicked()), this, SLOT(addDevice()));
+
+	if (!parent->inherits("AdapterView"))
+		return;
+	AdapterView *adapter = (AdapterView *)parent;
+
+	connect(adapter->getAdapter(), SIGNAL(DeviceDisappeared(QString)),
+				search, SLOT(DeviceDisappeared(QString)));
+	connect(adapter->getAdapter(), SIGNAL(DeviceFound(QString,QVariantMap)),
+				search, SLOT(DeviceFound(QString,QVariantMap)));
+	connect(adapter->getAdapter(),
+			SIGNAL(PropertyChanged(QString,QDBusVariant)),
+			search, SLOT(propertyChanged(QString,QDBusVariant)));
 }
 
 DevicesWindow::~DevicesWindow()
@@ -50,19 +62,11 @@ void DevicesWindow::removeWidget(QWidget *widget)
 
 void DevicesWindow::addDevice()
 {
+	search->show();
+
 	if (!parent()->inherits("AdapterView"))
 		return;
 	AdapterView *adapter = (AdapterView *)parent();
-	DeviceSearchView *search= new DeviceSearchView(this);
 
-	connect(adapter->getAdapter(), SIGNAL(DeviceDisappeared(QString)),
-				search, SLOT(DeviceDisappeared(QString)));
-	connect(adapter->getAdapter(), SIGNAL(DeviceFound(QString,QVariantMap)),
-				search, SLOT(DeviceFound(QString,QVariantMap)));
-	connect(adapter->getAdapter(),
-			SIGNAL(PropertyChanged(QString,QDBusVariant)),
-			search, SLOT(propertyChanged(QString,QDBusVariant)));
-
-	search->show();
 	adapter->getAdapter()->StartDiscovery();
 }

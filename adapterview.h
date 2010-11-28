@@ -42,6 +42,8 @@ public:
 	QString adapterPath();
 
 public slots:
+	void requestDiscovery();
+
 	/* D-Bus Agent slots */
 	void Authorize(const QDBusObjectPath &device, const QString &uuid);
 	void Cancel();

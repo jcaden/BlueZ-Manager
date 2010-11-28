@@ -19,7 +19,8 @@ HEADERS += \
     mainwindow.h \
     deviceview.h \
     deviceswindow.h \
-    changenamedialog.h
+    changenamedialog.h \
+    devicesearchview.h
 SOURCES += main.cpp \
     bluez/manager.cpp \
     bluez/adapter.cpp \
@@ -29,13 +30,15 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     deviceview.cpp \
     deviceswindow.cpp \
-    changenamedialog.cpp
+    changenamedialog.cpp \
+    devicesearchview.cpp
 
 FORMS += \
     adapterview.ui \
     deviceview.ui \
     deviceswindow.ui \
-    changenamedialog.ui
+    changenamedialog.ui \
+    devicesearchview.ui
 
 # qDBUS_ADAPTORS += bluez/org.bluez.manager.xml \
 #    bluez/org.bluez.adapter.xml \

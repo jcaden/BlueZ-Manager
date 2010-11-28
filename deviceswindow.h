@@ -23,6 +23,8 @@
 
 #include <QDialog>
 
+#include <QVariantMap>
+
 namespace Ui {
 	class DevicesWindow;
 }
@@ -36,6 +38,15 @@ public:
 	~DevicesWindow();
 	void addWidget(QWidget *widget);
 	void removeWidget(QWidget *widget);
+
+signals:
+	void DeviceDisappeared(const QString &address);
+	void DeviceFound(const QString &address, const QVariantMap &values);
+
+	void requestDiscovery();
+
+private slots:
+	void addDevice();
 
 private:
 	Ui::DevicesWindow *ui;

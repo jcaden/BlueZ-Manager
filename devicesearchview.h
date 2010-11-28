@@ -18,44 +18,31 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "deviceswindow.h"
-#include "ui_deviceswindow.h"
+#ifndef DEVICESEARCHVIEW_H
+#define DEVICESEARCHVIEW_H
 
-#include "devicesearchview.h"
+#include <QDialog>
+#include <QVariantMap>
+#include <QSet>
 
-DevicesWindow::DevicesWindow(QWidget *parent) :
-	QDialog(parent),
-	ui(new Ui::DevicesWindow)
-{
-	ui->setupUi(this);
-
-	connect(ui->addDevice, SIGNAL(clicked()), this, SLOT(addDevice()));
+namespace Ui {
+	class DeviceSearchView;
 }
 
-DevicesWindow::~DevicesWindow()
+class DeviceSearchView : public QDialog
 {
-	delete ui;
-}
+	Q_OBJECT
 
-void DevicesWindow::addWidget(QWidget *widget)
-{
-	ui->devices->addWidget(widget);
-}
+public:
+	explicit DeviceSearchView(QWidget *parent = 0);
+	~DeviceSearchView();
 
-void DevicesWindow::removeWidget(QWidget *widget)
-{
-	ui->devices->removeWidget(widget);
-}
+public slots:
+	void DeviceDisappeared(const QString &address);
+	void DeviceFound(const QString &address, const QVariantMap &values);
 
-void DevicesWindow::addDevice()
-{
-	DeviceSearchView *search= new DeviceSearchView(this);
+private:
+	Ui::DeviceSearchView *ui;
+};
 
-	connect(this, SIGNAL(DeviceDisappeared(QString)), search,
-					SLOT(DeviceDisappeared(QString)));
-	connect(this, SIGNAL(DeviceFound(QString,QVariantMap)), search,
-					SLOT(DeviceFound(QString,QVariantMap)));
-
-	search->show();
-	emit requestDiscovery();
-}
+#endif // DEVICESEARCHVIEW_H

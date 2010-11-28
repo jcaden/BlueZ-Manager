@@ -95,6 +95,17 @@ void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
 		this->deviceCreated(QDBusObjectPath(path));
 
 	devicesWindow->setWindowTitle(tr("Devices for adapter ") + name);
+
+	connect(&adapter, SIGNAL(DeviceFound(QString,QVariantMap)),
+				devicesWindow,
+				SIGNAL(DeviceFound(QString,QVariantMap)));
+	connect(&adapter, SIGNAL(DeviceDisappeared(QString)),
+				devicesWindow,
+				SIGNAL(DeviceDisappeared(QString)));
+	connect(devicesWindow, SIGNAL(requestDiscovery()), this,
+						SLOT(requestDiscovery()));
+//	connect(this, SIGNAL(discoveryFinished()), devicesWindow,
+//						SLOT(discoveryFinished()));
 }
 
 void AdapterView::setVisibility(bool visible, int timeout)
@@ -253,6 +264,12 @@ void AdapterView::showDevicesClicked(bool checked)
 void AdapterView::deleteDevice(const QString &path)
 {
 	adapter.RemoveDevice(QDBusObjectPath(path));
+}
+
+void AdapterView::requestDiscovery()
+{
+	//TODO: emit signal when finished
+	adapter.StartDiscovery();
 }
 
 /* D-Bus Agent slots */

@@ -21,6 +21,7 @@
 #include "deviceswindow.h"
 #include "ui_deviceswindow.h"
 
+#include "adapterview.h"
 #include "devicesearchview.h"
 
 DevicesWindow::DevicesWindow(QWidget *parent) :
@@ -49,13 +50,19 @@ void DevicesWindow::removeWidget(QWidget *widget)
 
 void DevicesWindow::addDevice()
 {
+	if (!parent()->inherits("AdapterView"))
+		return;
+	AdapterView *adapter = (AdapterView *)parent();
 	DeviceSearchView *search= new DeviceSearchView(this);
 
-	connect(this, SIGNAL(DeviceDisappeared(QString)), search,
-					SLOT(DeviceDisappeared(QString)));
-	connect(this, SIGNAL(DeviceFound(QString,QVariantMap)), search,
-					SLOT(DeviceFound(QString,QVariantMap)));
+	connect(adapter->getAdapter(), SIGNAL(DeviceDisappeared(QString)),
+				search, SLOT(DeviceDisappeared(QString)));
+	connect(adapter->getAdapter(), SIGNAL(DeviceFound(QString,QVariantMap)),
+				search, SLOT(DeviceFound(QString,QVariantMap)));
+	connect(adapter->getAdapter(),
+			SIGNAL(PropertyChanged(QString,QDBusVariant)),
+			search, SLOT(propertyChanged(QString,QDBusVariant)));
 
 	search->show();
-	emit requestDiscovery();
+	adapter->getAdapter()->StartDiscovery();
 }

@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QVariantMap>
 #include <QSet>
+#include <QDBusVariant>
 
 namespace Ui {
 	class DeviceSearchView;
@@ -40,6 +41,7 @@ public:
 public slots:
 	void DeviceDisappeared(const QString &address);
 	void DeviceFound(const QString &address, const QVariantMap &values);
+	void propertyChanged(const QString name, const QDBusVariant value);
 
 private:
 	Ui::DeviceSearchView *ui;

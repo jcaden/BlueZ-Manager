@@ -40,6 +40,7 @@ public:
 	~AdapterView();
 
 	QString adapterPath();
+	OrgBluezAdapterInterface *getAdapter();
 
 public slots:
 	void requestDiscovery();

@@ -27,12 +27,15 @@ DeviceSearchView::DeviceSearchView(QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::DeviceSearchView)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
+
+	ui->progressBar->setMaximum(1);
+	ui->progressBar->setValue(1);
 }
 
 DeviceSearchView::~DeviceSearchView()
 {
-    delete ui;
+	delete ui;
 }
 
 void DeviceSearchView::DeviceDisappeared(const QString &address)
@@ -63,4 +66,20 @@ void DeviceSearchView::DeviceFound(const QString &address,
 	QTreeWidgetItem *widget = new QTreeWidgetItem(ui->treeWidget);
 	widget->setText(0, values["Name"].toString());
 	widget->setText(1, address);
+}
+
+void DeviceSearchView::propertyChanged(const QString name,
+						const QDBusVariant value)
+{
+	if (name == "Discovering") {
+		if (value.variant().toBool()) {
+			ui->progressBar->setMaximum(0);
+			ui->progressBar->setValue(0);
+			ui->progressBar->setFormat("Searching");
+		} else {
+			ui->progressBar->setMaximum(1);
+			ui->progressBar->setValue(1);
+			ui->progressBar->setFormat("Search done");
+		}
+	}
 }

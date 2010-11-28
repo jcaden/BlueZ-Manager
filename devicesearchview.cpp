@@ -71,7 +71,6 @@ void DeviceSearchView::propertyChanged(const QString name,
 		if (value.variant().toBool()) {
 			ui->progressBar->setMaximum(0);
 			ui->progressBar->setValue(0);
-			ui->progressBar->setFormat("Searching");
 		} else {
 			ui->progressBar->setMaximum(1);
 			ui->progressBar->setValue(1);

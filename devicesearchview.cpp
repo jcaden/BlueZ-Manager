@@ -33,6 +33,8 @@ DeviceSearchView::DeviceSearchView(QWidget *parent) :
 	ui->progressBar->setValue(1);
 
 	connect(ui->searchAgain, SIGNAL(clicked()), this, SLOT(searchAgain()));
+	connect(ui->pairDevice, SIGNAL(clicked()), this,
+						SLOT(pairWithSelected()));
 }
 
 DeviceSearchView::~DeviceSearchView()
@@ -89,4 +91,13 @@ void DeviceSearchView::searchAgain()
 		return;
 	AdapterView *adapter = (AdapterView *)parent()->parent();
 	adapter->getAdapter()->StartDiscovery();
+}
+
+void DeviceSearchView::pairWithSelected()
+{
+	QList<QTreeWidgetItem *> devices = ui->treeWidget->selectedItems();
+	foreach (QTreeWidgetItem *device, devices) {
+		qDebug() << "Device selected " << device->text(0);
+		//TODO: Pair selected device
+	}
 }

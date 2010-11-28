@@ -45,6 +45,7 @@ public slots:
 
 private slots:
 	void searchAgain();
+	void pairWithSelected();
 
 private:
 	Ui::DeviceSearchView *ui;

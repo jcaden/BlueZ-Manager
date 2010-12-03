@@ -72,15 +72,15 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 	createDevicesView(qdbus_cast<QStringList>(props["Devices"]),
 						props["Name"].toString());
 
-	QString adapterPath = AGENT_BASE;
-	adapterPath.append(path.split("/").last());
+	QString agentPath = AGENT_BASE;
+	agentPath.append(path.split("/").last());
 
 	new AgentAdaptor(this);
-	QDBusConnection::systemBus().registerObject(adapterPath, this);
+	QDBusConnection::systemBus().registerObject(agentPath, this);
 
 	// Do not check the response, if fails is assumed that other agent
 	// is already registered an no option of register a new one.
-	adapter.RegisterAgent(QDBusObjectPath(adapterPath), "DisplayYesNo");
+	adapter.RegisterAgent(QDBusObjectPath(agentPath), AGENT_CAPABILITIES);
 }
 
 AdapterView::~AdapterView()

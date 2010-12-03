@@ -29,6 +29,7 @@ DevicesWindow::DevicesWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 	search= new DeviceSearchView(this);
+	search->setWindowTitle(tr("Search Devices"));
 
 	connect(ui->addDevice, SIGNAL(clicked()), this, SLOT(addDevice()));
 

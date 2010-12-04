@@ -15,6 +15,7 @@ HEADERS += \
     bluez/device.h \
     bluez/agent.h \
     bluez/types.h \
+    manageragent.h \
     adapterview.h \
     mainwindow.h \
     deviceview.h \
@@ -26,6 +27,7 @@ SOURCES += main.cpp \
     bluez/adapter.cpp \
     bluez/device.cpp \
     bluez/agent.cpp \
+    manageragent.cpp \
     adapterview.cpp \
     mainwindow.cpp \
     deviceview.cpp \

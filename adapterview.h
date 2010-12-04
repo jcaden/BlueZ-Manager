@@ -23,6 +23,8 @@
 
 #include <QtGui>
 
+#include <manageragent.h>
+
 #include <deviceview.h>
 #include <deviceswindow.h>
 #include <bluez/adapter.h>
@@ -31,7 +33,7 @@ namespace Ui {
 	class AdapterView;
 }
 
-class AdapterView : public QWidget
+class AdapterView : public ManagerAgent
 {
 	Q_OBJECT
 
@@ -44,16 +46,6 @@ public:
 
 public slots:
 	void requestDiscovery();
-
-	/* D-Bus Agent slots */
-	void Authorize(const QDBusObjectPath &device, const QString &uuid);
-	void Cancel();
-	void ConfirmModeChange(const QString &mode);
-	void DisplayPasskey(const QDBusObjectPath &device, uint passkey);
-	void Release();
-	void RequestConfirmation(const QDBusObjectPath &device, uint passkey);
-	uint RequestPasskey(const QDBusObjectPath &device);
-	QString RequestPinCode(const QDBusObjectPath &device);
 
 private slots:
 	void applyClicked();

@@ -23,6 +23,8 @@
 
 #include "adapterview.h"
 
+#include "bluez/types.h"
+
 DeviceSearchView::DeviceSearchView(QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::DeviceSearchView)
@@ -98,6 +100,41 @@ void DeviceSearchView::pairWithSelected()
 	QList<QTreeWidgetItem *> devices = ui->treeWidget->selectedItems();
 	foreach (QTreeWidgetItem *device, devices) {
 		qDebug() << "Device selected " << device->text(0);
-		//TODO: Pair selected device
+
+		if (!parent()->parent()->inherits("AdapterView"))
+			return;
+		AdapterView *adapter = (AdapterView *)parent()->parent();
+		adapter->getAdapter()->StopDiscovery();
+
+//		TODO: Add create an agent for the pairing
+		QString agentPath = AGENT_BASE;
+		agentPath.append(
+			adapter->getAdapter()->path().split("/").last());
+
+		QDBusPendingReply<QDBusObjectPath> reply;
+		reply = adapter->getAdapter()->CreatePairedDevice(
+					device->text(1),
+					QDBusObjectPath(agentPath),
+					QString(AGENT_CAPABILITIES));
+		QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(
+				reply, this);
+		connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
+				this,
+				SLOT(pairedFinished(QDBusPendingCallWatcher*)));
 	}
+}
+
+void DeviceSearchView::pairedFinished(QDBusPendingCallWatcher *watcher)
+{
+	if (watcher->isError() || watcher->reply().signature() != "o") {
+		watcher->error().type();
+		qWarning() << "Error " << watcher->error().type() <<
+			" during pairing: " << watcher->error().message();
+		//TODO: Notify the user about the error
+		return;
+	}
+
+	QDBusObjectPath path;
+	path = watcher->reply().arguments()[0].value<QDBusObjectPath>();
+	qDebug() << "Device with path " << path.path() << " paired";
 }

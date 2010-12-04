@@ -25,6 +25,7 @@
 #include <QVariantMap>
 #include <QSet>
 #include <QDBusVariant>
+#include <QDBusPendingCallWatcher>
 
 namespace Ui {
 	class DeviceSearchView;
@@ -46,6 +47,7 @@ public slots:
 private slots:
 	void searchAgain();
 	void pairWithSelected();
+	void pairedFinished(QDBusPendingCallWatcher *watcher);
 
 private:
 	Ui::DeviceSearchView *ui;

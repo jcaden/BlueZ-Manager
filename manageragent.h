@@ -30,7 +30,7 @@ class ManagerAgent : public QObject
 	Q_OBJECT
 
 public:
-	ManagerAgent(QObject *parent = 0);
+	ManagerAgent(const QString &path, QObject *parent = 0);
 	~ManagerAgent();
 
 	QString adapterPath();
@@ -45,6 +45,9 @@ public slots:
 	void RequestConfirmation(const QDBusObjectPath &device, uint passkey);
 	uint RequestPasskey(const QDBusObjectPath &device);
 	QString RequestPinCode(const QDBusObjectPath &device);
+
+private:
+	QString path;
 
 };
 

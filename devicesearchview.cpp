@@ -114,7 +114,7 @@ void DeviceSearchView::pairWithSelected()
 		QString address = device->text(1);
 		agentPath.append("/" + address.replace(":", "_"));
 
-		ManagerAgent *agent = new ManagerAgent(this);
+		ManagerAgent *agent = new ManagerAgent(agentPath, this);
 		new AgentAdaptor(agent);
 		QDBusConnection::systemBus().registerObject(agentPath, agent);
 

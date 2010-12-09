@@ -75,7 +75,7 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 	QString agentPath = AGENT_BASE;
 	agentPath.append(path.split("/").last());
 
-	ManagerAgent *agent = new ManagerAgent(this);
+	ManagerAgent *agent = new ManagerAgent(agentPath, this);
 	new AgentAdaptor(agent);
 	QDBusConnection::systemBus().registerObject(agentPath, agent);
 

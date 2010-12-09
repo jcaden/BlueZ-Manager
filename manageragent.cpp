@@ -21,9 +21,11 @@
 #include "manageragent.h"
 
 #include <QDebug>
+#include <QDBusConnection>
 
-ManagerAgent::ManagerAgent(QObject *parent) :
-	QObject(parent)
+ManagerAgent::ManagerAgent(const QString &path, QObject *parent) :
+	QObject(parent),
+	path(path)
 {
 }
 
@@ -60,8 +62,8 @@ void ManagerAgent::DisplayPasskey(const QDBusObjectPath &device, uint passkey)
 
 void ManagerAgent::Release()
 {
-	/* TODO: Implement this method */
-	qDebug() << "Release received";
+	QDBusConnection::systemBus().unregisterObject(path);
+	delete this;
 }
 
 void ManagerAgent::RequestConfirmation(const QDBusObjectPath &device,

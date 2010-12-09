@@ -21,16 +21,16 @@
 #ifndef MANAGER_AGENT_H
 #define MANAGER_AGENT_H
 
-#include <QWidget>
+#include <QObject>
 
 #include <QDBusObjectPath>
 
-class ManagerAgent : public QWidget
+class ManagerAgent : public QObject
 {
 	Q_OBJECT
 
 public:
-	ManagerAgent(QWidget *parent = 0);
+	ManagerAgent(QObject *parent = 0);
 	~ManagerAgent();
 
 	QString adapterPath();

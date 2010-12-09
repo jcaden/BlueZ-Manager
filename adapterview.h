@@ -33,7 +33,7 @@ namespace Ui {
 	class AdapterView;
 }
 
-class AdapterView : public ManagerAgent
+class AdapterView : public QWidget
 {
 	Q_OBJECT
 

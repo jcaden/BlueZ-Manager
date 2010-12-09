@@ -22,8 +22,8 @@
 
 #include <QDebug>
 
-ManagerAgent::ManagerAgent(QWidget *parent) :
-	QWidget(parent)
+ManagerAgent::ManagerAgent(QObject *parent) :
+	QObject(parent)
 {
 }
 

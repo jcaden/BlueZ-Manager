@@ -31,7 +31,7 @@ enum {
 };
 
 AdapterView::AdapterView(const QString path, QWidget *parent) :
-	ManagerAgent(parent),
+	QWidget(parent),
 	ui(new Ui::AdapterView),
 	adapter("org.bluez", path, QDBusConnection::systemBus())
 {
@@ -75,11 +75,12 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 	QString agentPath = AGENT_BASE;
 	agentPath.append(path.split("/").last());
 
-	new AgentAdaptor(this);
-	QDBusConnection::systemBus().registerObject(agentPath, this);
+	ManagerAgent *agent = new ManagerAgent(this);
+	new AgentAdaptor(agent);
+	QDBusConnection::systemBus().registerObject(agentPath, agent);
 
 	// Do not check the response, if fails is assumed that other agent
-	// is already registered an no option of register a new one.
+	// is already registered and no option of register a new one.
 	adapter.RegisterAgent(QDBusObjectPath(agentPath), AGENT_CAPABILITIES);
 }
 

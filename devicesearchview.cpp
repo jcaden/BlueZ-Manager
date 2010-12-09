@@ -24,6 +24,7 @@
 #include "adapterview.h"
 
 #include "bluez/types.h"
+#include "bluez/agent.h"
 
 DeviceSearchView::DeviceSearchView(QWidget *parent) :
 	QDialog(parent),
@@ -110,6 +111,12 @@ void DeviceSearchView::pairWithSelected()
 		QString agentPath = AGENT_BASE;
 		agentPath.append(
 			adapter->getAdapter()->path().split("/").last());
+		QString address = device->text(1);
+		agentPath.append("/" + address.replace(":", "_"));
+
+		ManagerAgent *agent = new ManagerAgent(this);
+		new AgentAdaptor(agent);
+		QDBusConnection::systemBus().registerObject(agentPath, agent);
 
 		QDBusPendingReply<QDBusObjectPath> reply;
 		reply = adapter->getAdapter()->CreatePairedDevice(

@@ -86,6 +86,10 @@ AdapterView::AdapterView(const QString path, QWidget *parent) :
 
 AdapterView::~AdapterView()
 {
+	QString agentPath = AGENT_BASE;
+	agentPath.append(adapterPath().split("/").last());
+
+	adapter.UnregisterAgent(QDBusObjectPath(agentPath));
 	delete ui;
 }
 

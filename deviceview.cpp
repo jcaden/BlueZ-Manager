@@ -136,7 +136,7 @@ void DeviceView::newNameSet(const QString &name)
 /* Context menu */
 void DeviceView::contextMenu(const QPoint &pos)
 {
-	QMenu *menu = new QMenu();
+	QMenu *menu = new QMenu(this);
 	menu->addAction(tr("Delete pairing"), this, SLOT(deletePairing()));
 	menu->addAction(tr("Change name"), this, SLOT(changeName()));
 	menu->exec(ui->device->mapToGlobal(pos));

@@ -7,6 +7,7 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 CONFIG += qdbus
+unix:LIBS += -lkdeui
 
 # Input
 HEADERS += \

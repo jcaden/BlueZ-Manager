@@ -22,11 +22,13 @@
 #include "adapterview.h"
 
 #include <QtGui>
+#include <kicon.h>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QWidget(parent),
 	manager("org.bluez", "/", QDBusConnection::systemBus())
 {
+	setWindowIcon(KIcon("preferences-system-bluetooth"));
 	setWindowTitle(tr("Bluetooth Manager"));
 
 	QVBoxLayout *vLayout = new QVBoxLayout(this);

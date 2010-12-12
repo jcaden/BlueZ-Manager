@@ -23,7 +23,7 @@
 
 #include <QtGui>
 #include <kicon.h>
-#include <ksystemtrayicon.h>
+#include <kstatusnotifieritem.h>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QWidget(parent),
@@ -54,9 +54,15 @@ MainWindow::MainWindow(QWidget *parent) :
 						QSizePolicy::MinimumExpanding);
 	vLayout->addItem(spacer);
 
-	KSystemTrayIcon *tray = new KSystemTrayIcon(this);
-	tray->setIcon(KIcon("preferences-system-bluetooth"));
-	tray->show();
+	KStatusNotifierItem *tray = new KStatusNotifierItem(this);
+	tray->setCategory(KStatusNotifierItem::Hardware);
+	tray->setIconByName("preferences-system-bluetooth");
+
+	tray->setToolTipIconByName("preferences-system-bluetooth");
+	tray->setToolTipTitle("BlueZ Manager");
+	tray->setToolTipSubTitle("Bluetooth Manager");
+
+	tray->setStatus(KStatusNotifierItem::Active);
 
 	connect(&manager, SIGNAL(AdapterAdded(QDBusObjectPath)), this,
 					SLOT(adapterAdded(QDBusObjectPath)));

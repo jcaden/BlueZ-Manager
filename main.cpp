@@ -27,7 +27,6 @@
 
 int main(int argc, char *argv[])
 {
-//	QApplication app(argc, argv);
 	KAboutData aboutData( "bluezManager", NULL,
 		ki18n("BlueZ Manager"), "1.0",
 		ki18n("A Bluetooth Manager for KDE."),

@@ -19,13 +19,27 @@
  */
 
 #include <QtGui>
+#include <kapplication.h>
+#include <kcmdlineargs.h>
+#include <kaboutdata.h>
 
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-	QApplication app(argc, argv);
+//	QApplication app(argc, argv);
+	KAboutData aboutData( "bluezManager", NULL,
+		ki18n("BlueZ Manager"), "1.0",
+		ki18n("A Bluetooth Manager for KDE."),
+		KAboutData::License_GPL_V3,
+		ki18n("Copyright (c) 2010 José Antonio Santos Cadenas"));
+	KCmdLineArgs::init(argc, argv, &aboutData);
+
+	aboutData.addAuthor(ki18n("José Antonio Santos Cadenas"),
+				ki18n("Developer and Project founder"),
+				"santoscadenas@gmail.com");
+	KApplication app;
+	app.setQuitOnLastWindowClosed(false);
 	MainWindow window;
-	window.show();
 	return app.exec();
 }

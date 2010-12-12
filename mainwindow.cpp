@@ -23,6 +23,7 @@
 
 #include <QtGui>
 #include <kicon.h>
+#include <ksystemtrayicon.h>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QWidget(parent),
@@ -52,6 +53,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
 						QSizePolicy::MinimumExpanding);
 	vLayout->addItem(spacer);
+
+	KSystemTrayIcon *tray = new KSystemTrayIcon(this);
+	tray->setIcon(KIcon("preferences-system-bluetooth"));
+	tray->show();
 
 	connect(&manager, SIGNAL(AdapterAdded(QDBusObjectPath)), this,
 					SLOT(adapterAdded(QDBusObjectPath)));

@@ -19,7 +19,7 @@
  */
 
 #include <QtGui>
-#include <kapplication.h>
+#include <kuniqueapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 				ki18n("Developer and Project founder"),
 				"santoscadenas@gmail.com");
 	aboutData.setProgramIconName("preferences-system-bluetooth");
-	KApplication app;
+	KUniqueApplication app;
 	app.setQuitOnLastWindowClosed(false);
 	MainWindow window;
 	return app.exec();

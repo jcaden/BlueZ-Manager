@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
 	aboutData.addAuthor(ki18n("José Antonio Santos Cadenas"),
 				ki18n("Developer and Project founder"),
 				"santoscadenas@gmail.com");
+	aboutData.setProgramIconName("preferences-system-bluetooth");
 	KApplication app;
 	app.setQuitOnLastWindowClosed(false);
 	MainWindow window;

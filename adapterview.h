@@ -46,6 +46,8 @@ public:
 
 public slots:
 	void requestDiscovery();
+	void notifyCreation();
+	void notifyDestruction();
 
 private slots:
 	void applyClicked();
@@ -64,6 +66,7 @@ private:
 	void setVisibility(bool visible, int timeout);
 	void createDevicesView(QStringList devicesPaths, QString name);
 	DeviceView *getDeviceView(const QString path);
+	DeviceView *createDevice(const QDBusObjectPath &device);
 
 	Ui::AdapterView *ui;
 	int timeout;

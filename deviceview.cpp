@@ -24,6 +24,9 @@
 #include "ui_deviceview.h"
 #include "changenamedialog.h"
 
+#include <knotification.h>
+#include <klocalizedstring.h>
+
 DeviceView::DeviceView(QString path, QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::DeviceView),
@@ -155,4 +158,22 @@ void DeviceView::changeName()
 	connect(cnd, SIGNAL(newNameSet(QString)), this,
 						SLOT(newNameSet(QString)));
 	cnd->show();
+}
+
+void DeviceView::notifyCreation()
+{
+	KNotification *notification= new KNotification("device_added", this);
+	notification->setTitle(i18n("New device"));
+	notification->setText(i18n("Device %1 has been paired",
+					properties["Alias"].toString()));
+	notification->sendEvent();
+}
+
+void DeviceView::notifyDestruction()
+{
+	KNotification *notification= new KNotification("device_removed");
+	notification->setTitle(i18n("Device deleted"));
+	notification->setText(i18n("Device %1 has been unpaired",
+					properties["Alias"].toString()));
+	notification->sendEvent();
 }

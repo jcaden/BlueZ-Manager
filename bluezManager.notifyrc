@@ -1,0 +1,24 @@
+[Global]
+IconName=preferences-system-bluetooth
+Comment=BlueZ Manager
+Ignore=true
+
+[Event/adapter_added]
+Name=New adapter
+Comment=A new adapter has been added
+Action=Popup
+
+[Event/adapter_removed]
+Name=Adapter removed
+Comment=An adapter has been removed from the system
+Action=Popup
+
+[Event/device_added]
+Name=New device
+Comment=A new device has been paired
+Action=Popup
+
+[Event/device_removed]
+Name=Device removed
+Comment=A device has been unpaired
+Action=Popup

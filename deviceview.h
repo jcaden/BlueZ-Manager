@@ -41,6 +41,10 @@ public:
 signals:
 	void deletePairing(const QString &device);
 
+public slots:
+	void notifyCreation();
+	void notifyDestruction();
+
 private slots:
 	void propertyChanged(const QString &name, const QDBusVariant &value);
 	void connectedClicked();

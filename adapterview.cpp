@@ -24,6 +24,9 @@
 #include "bluez/adapter.h"
 #include "bluez/agent.h"
 
+#include <knotification.h>
+#include <klocalizedstring.h>
+
 enum {
 	HIDDEN = 0,
 	ALWAYS = 1,
@@ -97,7 +100,7 @@ void AdapterView::createDevicesView(QStringList devicesPaths, QString name)
 {
 	devicesWindow = new DevicesWindow(this);
 	foreach (QString path, devicesPaths)
-		this->deviceCreated(QDBusObjectPath(path));
+		createDevice(QDBusObjectPath(path));
 
 	devicesWindow->setWindowTitle(tr("Devices for adapter ") + name);
 }
@@ -233,10 +236,11 @@ void AdapterView::deviceRemoved(const QDBusObjectPath &device)
 	devices.removeAll(view);
 
 	devicesWindow->removeWidget(view);
+	view->notifyDestruction();
 	delete view;
 }
 
-void AdapterView::deviceCreated(const QDBusObjectPath &device)
+DeviceView *AdapterView::createDevice(const QDBusObjectPath &device)
 {
 	DeviceView *deviceView = new DeviceView(device.path(), this);
 
@@ -245,6 +249,13 @@ void AdapterView::deviceCreated(const QDBusObjectPath &device)
 
 	connect(deviceView, SIGNAL(deletePairing(QString)), this,
 						SLOT(deleteDevice(QString)));
+	return deviceView;
+}
+
+void AdapterView::deviceCreated(const QDBusObjectPath &device)
+{
+	DeviceView *deviceView = createDevice(device);
+	deviceView->notifyCreation();
 }
 
 void AdapterView::showDevicesClicked(bool checked)
@@ -269,4 +280,23 @@ void AdapterView::requestDiscovery()
 {
 	//TODO: emit signal when finished
 	adapter.StartDiscovery();
+}
+
+void AdapterView::notifyCreation()
+{
+	KNotification *notification= new KNotification("adapter_added", this);
+	notification->setTitle(i18n("New adapter added"));
+	notification->setText(i18n("Adapter %1 has been connected",
+						ui->nameEdit->text()));
+	notification->sendEvent();
+}
+
+void AdapterView::notifyDestruction()
+{
+	KNotification *notification= new KNotification("adapter_removed");
+	notification->setTitle(i18n("Adapter removed from the system"));
+	notification->setText(i18n("Adapter %1 has been removed "
+							"from the system",
+							ui->nameEdit->text()));
+	notification->sendEvent();
 }

@@ -85,6 +85,7 @@ void MainWindow::adapterRemoved(QDBusObjectPath path)
 	AdapterView *view = getAdapterView(path.path());
 	adapters.removeAll(view);
 	layout()->removeWidget(view);
+	view->notifyDestruction();
 	delete view;
 }
 
@@ -96,4 +97,6 @@ void MainWindow::adapterAdded(QDBusObjectPath path)
 	layout()->addWidget(adapterView);
 	layout()->addItem(spacer);
 	adapters.append(adapterView);
+
+	adapterView->notifyCreation();
 }

@@ -276,12 +276,6 @@ void AdapterView::deleteDevice(const QString &path)
 	adapter.RemoveDevice(QDBusObjectPath(path));
 }
 
-void AdapterView::requestDiscovery()
-{
-	//TODO: emit signal when finished
-	adapter.StartDiscovery();
-}
-
 void AdapterView::notifyCreation()
 {
 	KNotification *notification= new KNotification("adapter_added", this);

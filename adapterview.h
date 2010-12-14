@@ -45,7 +45,6 @@ public:
 	OrgBluezAdapterInterface *getAdapter();
 
 public slots:
-	void requestDiscovery();
 	void notifyCreation();
 	void notifyDestruction();
 

@@ -22,3 +22,13 @@ Action=Popup
 Name=Device removed
 Comment=A device has been unpaired
 Action=Popup
+
+[Event/requestPasskey]
+Name=Passkey requested
+Comment=The passkey for pairing a new device is requested
+Action=Popup
+
+[Event/requestPinCode]
+Name=Pin code requested
+Comment=The PIN code for pairing a new device is requested
+Action=Popup

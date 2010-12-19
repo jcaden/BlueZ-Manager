@@ -115,6 +115,9 @@ void DeviceSearchView::pairWithSelected()
 		agentPath.append("/" + address.replace(":", "_"));
 
 		ManagerAgent *agent = new ManagerAgent(agentPath, this);
+		//TODO set this in a proper way by the user
+		QString pin = "0000";
+		agent->setPinCode(pin);
 		new AgentAdaptor(agent);
 		QDBusConnection::systemBus().registerObject(agentPath, agent);
 

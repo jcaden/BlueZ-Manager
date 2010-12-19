@@ -18,41 +18,38 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MANAGER_AGENT_H
-#define MANAGER_AGENT_H
+#ifndef PINCODEDIALOG_H
+#define PINCODEDIALOG_H
 
-#include <QObject>
-
-#include <QDBusObjectPath>
+#include <QDialog>
 #include <QDBusMessage>
 
-class ManagerAgent : public QObject
+namespace Ui {
+	class PinCodeDialog;
+}
+
+class PinCodeDialog : public QDialog
 {
 	Q_OBJECT
 
 public:
-	ManagerAgent(const QString &path, QObject *parent = 0);
-	~ManagerAgent();
+	explicit PinCodeDialog(QDBusMessage &reply, QWidget *parent = 0);
+	explicit PinCodeDialog(QWidget *parent = 0);
+	~PinCodeDialog();
 
-	QString adapterPath();
-	void setPinCode(QString &pin);
+private slots:
+	void accepted();
 
-public slots:
-	/* D-Bus Agent slots */
-	void Authorize(const QDBusObjectPath &device, const QString &uuid);
-	void Cancel();
-	void ConfirmModeChange(const QString &mode);
-	void DisplayPasskey(const QDBusObjectPath &device, uint passkey);
-	void Release();
-	void RequestConfirmation(const QDBusObjectPath &device, uint passkey);
-	uint RequestPasskey(const QDBusObjectPath &device);
-	QString RequestPinCode(const QDBusObjectPath &device,
-						const QDBusMessage &message);
+signals:
+	void accepted(QString &value);
+
 
 private:
-	QString path;
-	QString *pinCode;
+	void init();
+
+	Ui::PinCodeDialog *ui;
+	QDBusMessage *reply;
 
 };
 
-#endif // MANAGER_AGENT_H
+#endif // PINCODEDIALOG_H

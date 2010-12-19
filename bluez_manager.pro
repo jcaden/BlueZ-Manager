@@ -22,7 +22,8 @@ HEADERS += \
     deviceview.h \
     deviceswindow.h \
     changenamedialog.h \
-    devicesearchview.h
+    devicesearchview.h \
+    pincodedialog.h
 SOURCES += main.cpp \
     bluez/manager.cpp \
     bluez/adapter.cpp \
@@ -34,14 +35,16 @@ SOURCES += main.cpp \
     deviceview.cpp \
     deviceswindow.cpp \
     changenamedialog.cpp \
-    devicesearchview.cpp
+    devicesearchview.cpp \
+    pincodedialog.cpp
 
 FORMS += \
     adapterview.ui \
     deviceview.ui \
     deviceswindow.ui \
     changenamedialog.ui \
-    devicesearchview.ui
+    devicesearchview.ui \
+    pincodedialog.ui
 
 # qDBUS_ADAPTORS += bluez/org.bluez.manager.xml \
 #    bluez/org.bluez.adapter.xml \

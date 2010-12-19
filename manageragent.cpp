@@ -19,18 +19,31 @@
  */
 
 #include "manageragent.h"
+#include "bluez/device.h"
+#include "pincodedialog.h"
 
 #include <QDebug>
 #include <QDBusConnection>
+
+#include <knotification.h>
+#include <klocalizedstring.h>
 
 ManagerAgent::ManagerAgent(const QString &path, QObject *parent) :
 	QObject(parent),
 	path(path)
 {
+	pinCode = NULL;
 }
 
 ManagerAgent::~ManagerAgent()
 {
+	if (pinCode)
+		delete pinCode;
+}
+
+void ManagerAgent::setPinCode(QString &pin)
+{
+	pinCode = new QString(pin);
 }
 
 /* D-Bus Agent slots */
@@ -81,9 +94,40 @@ uint ManagerAgent::RequestPasskey(const QDBusObjectPath &device)
 	return 0;
 }
 
-QString ManagerAgent::RequestPinCode(const QDBusObjectPath &device)
+QString ManagerAgent::RequestPinCode(const QDBusObjectPath &device,
+						const QDBusMessage &message)
 {
-	/* TODO: Implement this method */
-	qDebug() << "RequestPinCode received. Device: " << device.path();
-	return "0000";
+	if (pinCode)
+		return *pinCode;
+
+	OrgBluezDeviceInterface dev("org.bluez", device.path(),
+						QDBusConnection::systemBus());
+	QDBusPendingReply<QVariantMap>reply = dev.GetProperties();
+	reply.waitForFinished();
+	reply.reply();
+
+	if (!reply.isValid()) {
+		qCritical() << "Received unvalid reply";
+		return "";
+	}
+
+	QVariantMap properties = reply.value();
+	KNotification *notification= new KNotification("requestPinCode",
+				KNotification::CloseWhenWidgetActivated);
+	notification->setTitle(i18n("Enter PIN code"));
+	notification->setText(i18n("Enter PIN code for device %1",
+					properties["Alias"].toString()));
+	notification->setActions(QStringList(tr("Show window")));
+
+	message.setDelayedReply(true);
+	QDBusMessage rep = message.createReply();
+	PinCodeDialog *dialog = new PinCodeDialog(rep);
+	dialog->show();
+
+	notification->setWidget(dialog);
+	// TODO: Connect action signal to show the window
+	notification->sendEvent();
+
+
+	return QString();
 }

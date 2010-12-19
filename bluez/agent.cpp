@@ -77,11 +77,15 @@ uint AgentAdaptor::RequestPasskey(const QDBusObjectPath &device)
     return out0;
 }
 
-QString AgentAdaptor::RequestPinCode(const QDBusObjectPath &device)
+QString AgentAdaptor::RequestPinCode(const QDBusObjectPath &device,
+						const QDBusMessage &message)
 {
     // handle method call org.bluez.Agent.RequestPinCode
     QString out0;
-    QMetaObject::invokeMethod(parent(), "RequestPinCode", Q_RETURN_ARG(QString, out0), Q_ARG(QDBusObjectPath, device));
+    QMetaObject::invokeMethod(parent(), "RequestPinCode",
+						Q_RETURN_ARG(QString, out0),
+						Q_ARG(QDBusObjectPath, device),
+						Q_ARG(QDBusMessage, message));
     return out0;
 }
 

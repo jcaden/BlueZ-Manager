@@ -70,7 +70,8 @@ public Q_SLOTS: // METHODS
     void Release();
     void RequestConfirmation(const QDBusObjectPath &device, uint passkey);
     uint RequestPasskey(const QDBusObjectPath &device);
-    QString RequestPinCode(const QDBusObjectPath &device);
+    QString RequestPinCode(const QDBusObjectPath &device,
+						const QDBusMessage &message);
 Q_SIGNALS: // SIGNALS
 };
 

@@ -146,4 +146,10 @@ void DeviceSearchView::pairedFinished(QDBusPendingCallWatcher *watcher)
 	QDBusObjectPath path;
 	path = watcher->reply().arguments()[0].value<QDBusObjectPath>();
 	qDebug() << "Device with path " << path.path() << " paired";
+	hide();
+
+	if (!parent()->parent()->inherits("AdapterView"))
+		return;
+	AdapterView *adapter = (AdapterView *)parent()->parent();
+	adapter->getAdapter()->StopDiscovery();
 }

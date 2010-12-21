@@ -107,6 +107,8 @@ void DeviceSearchView::pairWithSelected()
 		AdapterView *adapter = (AdapterView *)parent()->parent();
 		adapter->getAdapter()->StopDiscovery();
 
+		setEnabled(false);
+
 		QString agentPath = AGENT_BASE;
 		agentPath.append(
 			adapter->getAdapter()->path().split("/").last());
@@ -135,6 +137,8 @@ void DeviceSearchView::pairWithSelected()
 
 void DeviceSearchView::pairedFinished(QDBusPendingCallWatcher *watcher)
 {
+	setEnabled(true);
+
 	if (watcher->isError() || watcher->reply().signature() != "o") {
 		watcher->error().type();
 		qWarning() << "Error " << watcher->error().type() <<

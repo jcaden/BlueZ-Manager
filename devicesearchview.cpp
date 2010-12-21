@@ -107,7 +107,6 @@ void DeviceSearchView::pairWithSelected()
 		AdapterView *adapter = (AdapterView *)parent()->parent();
 		adapter->getAdapter()->StopDiscovery();
 
-//		TODO: Add create an agent for the pairing
 		QString agentPath = AGENT_BASE;
 		agentPath.append(
 			adapter->getAdapter()->path().split("/").last());

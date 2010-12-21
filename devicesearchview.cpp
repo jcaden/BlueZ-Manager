@@ -22,6 +22,7 @@
 #include "ui_devicesearchview.h"
 
 #include "adapterview.h"
+#include "pincodedialog.h"
 
 #include "bluez/types.h"
 #include "bluez/agent.h"
@@ -109,29 +110,12 @@ void DeviceSearchView::pairWithSelected()
 
 		setEnabled(false);
 
-		QString agentPath = AGENT_BASE;
-		agentPath.append(
-			adapter->getAdapter()->path().split("/").last());
-		QString address = device->text(1);
-		agentPath.append("/" + address.replace(":", "_"));
-
-		ManagerAgent *agent = new ManagerAgent(agentPath, this);
-		//TODO set this in a proper way by the user
-		QString pin = "0000";
-		agent->setPinCode(pin);
-		new AgentAdaptor(agent);
-		QDBusConnection::systemBus().registerObject(agentPath, agent);
-
-		QDBusPendingReply<QDBusObjectPath> reply;
-		reply = adapter->getAdapter()->CreatePairedDevice(
-					device->text(1),
-					QDBusObjectPath(agentPath),
-					QString(AGENT_CAPABILITIES));
-		QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(
-				reply, this);
-		connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
-				this,
-				SLOT(pairedFinished(QDBusPendingCallWatcher*)));
+		PinCodeDialog *pinDialog = new PinCodeDialog(this);
+		connect(pinDialog, SIGNAL(accepted(QString&)), this,
+						SLOT(pinEntered(QString&)));
+		pinDialog->setWindowTitle(tr("Set PIN code for device ") +
+							device->text(0));
+		pinDialog->show();
 	}
 }
 
@@ -156,4 +140,38 @@ void DeviceSearchView::pairedFinished(QDBusPendingCallWatcher *watcher)
 		return;
 	AdapterView *adapter = (AdapterView *)parent()->parent();
 	adapter->getAdapter()->StopDiscovery();
+}
+
+void DeviceSearchView::pinEntered(QString &pin)
+{
+	QList<QTreeWidgetItem *> devices = ui->treeWidget->selectedItems();
+	foreach (QTreeWidgetItem *device, devices) {
+
+		if (!parent()->parent()->inherits("AdapterView"))
+			return;
+		AdapterView *adapter = (AdapterView *)parent()->parent();
+
+		QString agentPath = AGENT_BASE;
+		agentPath.append(
+			adapter->getAdapter()->path().split("/").last());
+		QString address = device->text(1);
+		agentPath.append("/" + address.replace(":", "_"));
+
+		ManagerAgent *agent = new ManagerAgent(agentPath, this);
+		agent->setPinCode(pin);
+
+		new AgentAdaptor(agent);
+		QDBusConnection::systemBus().registerObject(agentPath, agent);
+
+		QDBusPendingReply<QDBusObjectPath> reply;
+		reply = adapter->getAdapter()->CreatePairedDevice(
+					device->text(1),
+					QDBusObjectPath(agentPath),
+					QString(AGENT_CAPABILITIES));
+		QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(
+				reply, this);
+		connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
+				this,
+				SLOT(pairedFinished(QDBusPendingCallWatcher*)));
+	}
 }

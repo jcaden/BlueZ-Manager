@@ -48,6 +48,7 @@ private slots:
 	void searchAgain();
 	void pairWithSelected();
 	void pairedFinished(QDBusPendingCallWatcher *watcher);
+	void pinEntered(QString &pin);
 
 private:
 	Ui::DeviceSearchView *ui;

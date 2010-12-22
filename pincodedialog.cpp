@@ -44,6 +44,8 @@ void PinCodeDialog::init()
 	ui->setupUi(this);
 
 	connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
+
+	connect(this, SIGNAL(finished(int)), this, SLOT(deleteLater()));
 }
 
 PinCodeDialog::~PinCodeDialog()

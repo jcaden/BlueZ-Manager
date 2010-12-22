@@ -58,8 +58,6 @@ PinCodeDialog::~PinCodeDialog()
 void PinCodeDialog::accepted()
 {
 	QString code = ui->pinCode->text();
-	if (code.length() == 0)
-		return;
 
 	emit accepted(code);
 	if (!reply)

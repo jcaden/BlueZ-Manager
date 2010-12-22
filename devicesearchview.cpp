@@ -113,6 +113,8 @@ void DeviceSearchView::pairWithSelected()
 		PinCodeDialog *pinDialog = new PinCodeDialog(this);
 		connect(pinDialog, SIGNAL(accepted(QString&)), this,
 						SLOT(pinEntered(QString&)));
+		connect(pinDialog, SIGNAL(finished(int)), this,
+						SLOT(dialogFinished(int)));
 		pinDialog->setWindowTitle(tr("Set PIN code for device ") +
 							device->text(0));
 		pinDialog->show();
@@ -144,11 +146,19 @@ void DeviceSearchView::pairedFinished(QDBusPendingCallWatcher *watcher)
 
 void DeviceSearchView::pinEntered(QString &pin)
 {
+	if (pin.length() == 0) {
+		setEnabled(true);
+		return;
+	}
+
 	QList<QTreeWidgetItem *> devices = ui->treeWidget->selectedItems();
 	foreach (QTreeWidgetItem *device, devices) {
 
-		if (!parent()->parent()->inherits("AdapterView"))
+		if (!parent()->parent()->inherits("AdapterView")) {
+			setEnabled(true);
 			return;
+		}
+
 		AdapterView *adapter = (AdapterView *)parent()->parent();
 
 		QString agentPath = AGENT_BASE;
@@ -174,4 +184,10 @@ void DeviceSearchView::pinEntered(QString &pin)
 				this,
 				SLOT(pairedFinished(QDBusPendingCallWatcher*)));
 	}
+}
+
+void DeviceSearchView::dialogFinished(int result)
+{
+	if (result != QDialog::Accepted)
+		setEnabled(true);
 }
